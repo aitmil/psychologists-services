@@ -1,0 +1,15 @@
+.light {
+  color: var(--secondary-color);
+}
+
+.bold {
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.homeText {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 133%;
+  letter-spacing: -0.02em;
+}
