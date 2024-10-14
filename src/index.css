@@ -1,14 +1,71 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --font-family: 'Inter', sans-serif;
   font-weight: 400;
+  font-size: 16px;
+  line-height: 125%;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--main-color);
+  background-color: var(--main-background);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ============  Colors ============ */
+
+  --main-background: #f3f3f3;
+  --secondary-background: #fbfbfb;
+  --main-color: #191a15;
+  --secondary-color: rgba(25, 26, 21, 0.5);
+  --add-color: rgba(25, 26, 21, 0.3);
+  --light-color: #8a8a89;
+  --orange-transparent: rgba(252, 131, 44, 0.2);
+  --orange-light: #fc832c;
+  --orange-dark: #f37113;
+  --yellow: #ffc531;
+  --yellow-icon: #fbc75e;
+  --green: #38cd3e;
+  --green-icon: #54be96;
+
+  /* ========== Transition ========= */
+
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ======== Reset styles ======== */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a:focus,
+input:focus,
+textarea:focus,
+a:active,
+input:active,
+textarea:active {
+  outline: none;
+}
+
+a,
+input,
+textarea {
+  outline: none;
 }
