@@ -8,31 +8,31 @@
   border-radius: 30px;
 }
 
-.btn.filled {
+.filled {
   border: 1px solid transparent;
   background-color: var(--orange-light);
   color: var(--secondary-background);
   transition: background-color var(--transition);
 }
 
-.btn.filled:hover,
-.btn.filled:focus {
+.filled:hover,
+.filled:focus {
   background-color: var(--orange-dark);
 }
 
-.btn.outlined {
+.outlined {
   border: 1px solid rgba(25, 26, 21, 0.2);
   background-color: transparent;
   color: var(--main-color);
   transition: border-color var(--transition);
 }
 
-.btn.outlined:hover,
-.btn.outlined:focus {
+.outlined:hover,
+.outlined:focus {
   border-color: var(--orange-dark);
 }
 
-.btn.start {
+.start {
   font-weight: 500;
   font-size: 20px;
   line-height: 120%;
@@ -40,6 +40,6 @@
   padding: 18px 50px;
 }
 
-.btn.form {
+.form {
   padding: 16px;
 }
