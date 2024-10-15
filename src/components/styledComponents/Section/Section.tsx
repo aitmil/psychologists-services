@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import css from './Text.module.css';
+import css from './Section.module.css';
 
 export interface SectionProps {
   children: React.ReactNode;
