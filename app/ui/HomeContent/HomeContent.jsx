@@ -1,8 +1,8 @@
-import Container from '../styledComponents/Container/Container';
-import Text from '../styledComponents/Text/Text';
-import Title from '../styledComponents/Title/Title';
-import Button from '../styledComponents/Button/Button';
-import css from './HomeContent.module.css';
+import Container from "../Container/Container";
+import Text from "../Text/Text";
+import Title from "../Title/Title";
+import Button from "../Button/Button";
+import css from "./HomeContent.module.css";
 
 export default function HomeContent() {
   return (
