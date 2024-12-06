@@ -1,10 +1,9 @@
 import React from 'react';
-import css from './Container.module.css';
 
 export interface ContainerProps {
   children: React.ReactNode;
 }
 
 export default function Container({ children }: ContainerProps) {
-  return <div className={css.container}>{children}</div>;
+  return <div className="max-w-[1440px] mx-auto px-32">{children}</div>;
 }
