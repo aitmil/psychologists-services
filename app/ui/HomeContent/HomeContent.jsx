@@ -1,7 +1,7 @@
 import Container from '../Container';
 import Text from '../Text/Text';
 import Title from '../Title/Title';
-import Button from '../Button/Button';
+import Button from '../Button';
 import css from './HomeContent.module.css';
 
 export default function HomeContent() {
