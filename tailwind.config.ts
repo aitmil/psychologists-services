@@ -13,6 +13,7 @@ export default {
         'add-color': 'rgba(25, 26, 21, 0.3)',
         'border-color': 'rgba(25, 26, 21, 0.1)',
         overlay: 'rgba(25, 26, 21, 0.6)',
+        'secondary-background': '#ffffff',
         'light-color': '#8a8a89',
         'orange-transparent': 'rgba(252, 131, 44, 0.2)',
         'orange-light': '#fc832c',
