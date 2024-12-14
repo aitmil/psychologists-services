@@ -1,6 +1,6 @@
 import Container from '../Container';
 import Text from '../Text/Text';
-import Title from '../Title/Title';
+import Title from '../Title';
 import Button from '../Button';
 import css from './HomeContent.module.css';
 
