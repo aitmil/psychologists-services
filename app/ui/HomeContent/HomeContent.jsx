@@ -1,5 +1,5 @@
 import Container from '../Container';
-import Text from '../Text/Text';
+import Text from '../Text';
 import Title from '../Title';
 import Button from '../Button';
 import css from './HomeContent.module.css';
