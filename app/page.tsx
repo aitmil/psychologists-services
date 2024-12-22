@@ -1,5 +1,5 @@
-import HomeContent from './ui/HomeContent/HomeContent';
-import Section from './ui/Section/Section';
+import HomeContent from './ui/HomeContent';
+import Section from './ui/Section';
 
 export default function Home() {
   return (
