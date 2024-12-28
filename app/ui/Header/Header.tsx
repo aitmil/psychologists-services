@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Flex } from 'antd';
 import HeaderBtns from '../HeaderBtns';
-import Logo from '../Logo/Logo';
+import Logo from './Logo';
 import Navigation from './Navigation';
 import Container from '../Container';
 import css from './Header.module.css';
