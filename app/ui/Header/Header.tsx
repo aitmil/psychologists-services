@@ -1,11 +1,11 @@
+'use client';
+
 import { useState } from 'react';
-import { Flex } from 'antd';
-import HeaderBtns from '../HeaderBtns';
-import Logo from './Logo';
-import Navigation from './Navigation';
-import Container from '../Container';
-import css from './Header.module.css';
-import CustomModal from '../common/CustomModal/CustomModal';
+import HeaderBtns from '@/app/ui/header/HeaderBtns';
+import Logo from '@/app/ui/header/Logo';
+import Navigation from '@/app/ui/header/Navigation';
+import Container from '@/app/ui/Container';
+import CustomModal from '@/app/ui/CustomModal';
 
 export default function Header() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -14,15 +14,15 @@ export default function Header() {
   const handleCloseModal = () => setModalOpen(false);
 
   return (
-    <header className={css.header}>
+    <header className="py-8 border-b border-border-color">
       <Container>
-        <Flex align="center" justify="space-between">
-          <Flex align="center" gap={130}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[130px]">
             <Logo />
             <Navigation />
-          </Flex>
+          </div>
           <HeaderBtns onClick={handleOpenModal} />
-        </Flex>
+        </div>
       </Container>
 
       <CustomModal
