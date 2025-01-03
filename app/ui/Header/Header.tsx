@@ -1,17 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import HeaderBtns from '@/app/ui/header/HeaderBtns';
 import Logo from '@/app/ui/header/Logo';
 import Navigation from '@/app/ui/header/Navigation';
 import Container from '@/app/ui/Container';
-import CustomModal from '@/app/ui/CustomModal';
+// import CustomModal from '@/app/ui/CustomModal';
 
 export default function Header() {
-  const [isModalOpen, setModalOpen] = useState(false);
+  //   const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
+  //   const handleOpenModal = () => setModalOpen(true);
+  //   const handleCloseModal = () => setModalOpen(false);
 
   return (
     <header className="py-8 border-b border-border-color">
@@ -21,17 +21,17 @@ export default function Header() {
             <Logo />
             <Navigation />
           </div>
-          <HeaderBtns onClick={handleOpenModal} />
+          <HeaderBtns onClick={() => console.log('handleOpenModal')} />
         </div>
       </Container>
 
-      <CustomModal
+      {/* <CustomModal
         isOpen={isModalOpen}
         onRequestClose={handleCloseModal}
         contentLabel={'Login Modal'}
         handleCloseModal={handleCloseModal}
       >
-        {/* <LoginModalContent /> */}
+        <LoginModalContent />
         <p>hello</p>
       </CustomModal>
 
@@ -41,9 +41,9 @@ export default function Header() {
         contentLabel={'Registration Modal'}
         handleCloseModal={handleCloseModal}
       >
-        {/* <RegistrationModalContent /> */}
+        <RegistrationModalContent />
         <p>hello</p>
-      </CustomModal>
+      </CustomModal> */}
     </header>
   );
 }
