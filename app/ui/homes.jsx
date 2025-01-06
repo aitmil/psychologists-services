@@ -1,6 +1,6 @@
 import Container from '@/app/ui/Container';
-import Text from '@/app/ui/Text';
-import Title from '@/app/ui/Title';
+import Text from '@/app/ui/texts';
+import Title from '@/app/ui/gg';
 import Button from '@/app/ui/Button';
 
 export default function HomeContent() {

@@ -1,4 +1,4 @@
-import Button from '@/app/ui/Button';
+import Button from '@/app/ui/buttons';
 
 export interface HeaderBtnsProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
