@@ -1,9 +1,9 @@
 'use client';
 
 // import { useState } from 'react';
-import HeaderBtns from '@/app/ui/headers/headerBtnss';
-import Logo from '@/app/ui/headers/logos';
-import Navigation from '@/app/ui/headers/navigations';
+import HeaderBtns from '@/app/ui/header/headerBtnss';
+import Logo from '@/app/ui/header/logos';
+import Navigation from '@/app/ui/header/navigations';
 import Container from '@/app/ui/containers';
 // import CustomModal from '@/app/ui/CustomModal';
 
