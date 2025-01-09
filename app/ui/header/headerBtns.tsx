@@ -1,4 +1,6 @@
-import Button from '@/app/ui/buttons';
+'use client';
+
+import Button from '@/app/ui/button';
 
 export interface HeaderBtnsProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
