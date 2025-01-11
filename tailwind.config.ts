@@ -22,6 +22,10 @@ export default {
         green: '#38cd3e',
         'green-icon': '#54be96',
       },
+      rotate: {
+        '15': '15deg',
+        '345': '345deg',
+      },
     },
   },
   plugins: [],
