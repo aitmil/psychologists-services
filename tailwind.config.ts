@@ -12,6 +12,7 @@ export default {
         'add-color': 'rgba(25, 26, 21, 0.3)',
         'border-color': 'rgba(25, 26, 21, 0.1)',
         overlay: 'rgba(25, 26, 21, 0.6)',
+        'main-background': '#fbfbfb',
         'secondary-background': '#ffffff',
         'light-color': '#8a8a89',
         'orange-transparent': 'rgba(252, 131, 44, 0.2)',
@@ -21,6 +22,7 @@ export default {
         'yellow-icon': '#fbc75e',
         green: '#38cd3e',
         'green-icon': '#54be96',
+        light: 'rgba(251, 251, 251, 0.5)',
       },
       rotate: {
         '15': '15deg',
