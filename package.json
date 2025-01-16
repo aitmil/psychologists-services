@@ -12,10 +12,12 @@
     "@headlessui/react": "^2.2.0",
     "clsx": "^2.1.1",
     "firebase": "^11.2.0",
+    "formik": "^2.4.6",
     "next": "15.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-toastify": "^11.0.3"
+    "react-toastify": "^11.0.3",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
