@@ -31,9 +31,9 @@ export default function Modal({ show, children, onClose }: ModalProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-overlay bg-opacity-75 transition-opacity" />
         </TransitionChild>
-        <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all p-7 mx-auto sm:my-10 sm:w-full sm:max-w-2xl">
+        <DialogPanel className="relative transform overflow-hidden rounded-[30px] bg-main-background shadow-xl transition-all p-[64px] mx-auto max-w-[600px]">
           {children}
         </DialogPanel>
       </Dialog>
