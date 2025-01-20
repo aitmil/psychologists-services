@@ -11,6 +11,7 @@ export default function ImageContent() {
         width={464}
         height={526}
         alt="Photo of psychologist"
+        priority
       />
 
       <div className="w-[48px] h-[48px] rounded-[10px] bg-yellow-icon flex justify-center items-center absolute top-[38px] left-[449px] rotate-15">
