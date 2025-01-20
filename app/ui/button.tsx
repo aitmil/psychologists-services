@@ -4,6 +4,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 export interface ButtonProps {
+  className?: string;
   children: React.ReactNode;
   variant: 'filled' | 'outlined';
   type: 'submit' | 'reset' | 'button';
@@ -13,6 +14,7 @@ export interface ButtonProps {
 }
 
 export default function Button({
+  className,
   children,
   variant,
   type,
@@ -24,7 +26,7 @@ export default function Button({
     <button
       type={type}
       className={clsx(
-        'font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[30px] transition duration-200 px-[40px] py-[14px]',
+        `${className} font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[30px] transition duration-200 px-[40px] py-[14px]`,
         {
           // Variant styles
           'bg-orange-light text-white border-transparent hover:bg-orange-dark':
