@@ -14,6 +14,7 @@ export default {
         overlay: 'rgba(25, 26, 21, 0.6)',
         'semi-text': 'rgba(25, 26, 21, 0.5)',
         white: '#fbfbfb',
+        'primary-base': 'rgba(25, 26, 21)',
         'main-background': '#fbfbfb',
         'secondary-background': '#ffffff',
         black: '#191a15',
@@ -30,6 +31,12 @@ export default {
       rotate: {
         '15': '15deg',
         '345': '345deg',
+      },
+      textDecorationSkipInk: {
+        none: 'none',
+      },
+      strokeWidth: {
+        0: '0',
       },
     },
   },
