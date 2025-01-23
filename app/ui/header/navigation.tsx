@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+
+import { selectUser } from '@/app/lib/redux/users/selectors';
 
 const links = [
   { name: 'Home', href: '/' },
@@ -12,11 +15,12 @@ const links = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const user = useSelector(selectUser);
 
   return (
     <nav className="flex gap-[40px]">
       {links
-        .filter(link => !(link.name === 'Favorites' && pathname === '/'))
+        .filter(link => !(link.name === 'Favorites' && !user))
         .map(link => (
           <Link
             key={link.name}

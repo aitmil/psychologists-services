@@ -2,7 +2,10 @@
 
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
+import { Provider } from 'react-redux';
+
 import Header from '@/app/ui/header/header';
+import store from '@/app/lib/redux/store';
 import './globals.css';
 
 export const inter = Inter({
@@ -28,8 +31,10 @@ export default function RootLayout({
             : ''
         }`}
       >
-        <Header />
-        {children}
+        <Provider store={store}>
+          <Header />
+          {children}
+        </Provider>
       </body>
     </html>
   );
