@@ -1,9 +1,15 @@
-import React from 'react';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 import InputField from '../input-field';
 import Button from '../button';
-import { registerValidationSchema } from '@/app/utils/validation';
+import { registerValidationSchema } from '@/app/lib/validation';
+import { auth } from '@/app/lib/firebase';
+import { setUser } from '@/app/lib/redux/users/slice';
 
 export type RegisterFormValues = {
   name: string;
@@ -18,11 +24,46 @@ interface RegisterFormProps {
 }
 
 export default function RegisterForm({ onSubmit }: RegisterFormProps) {
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log('Form values:', values);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-    if (onSubmit) {
-      onSubmit(values);
+  const handleSubmit = async (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: values.name });
+
+      dispatch(
+        setUser({
+          name: values.name,
+          email: values.email,
+        })
+      );
+
+      resetForm();
+      router.back();
+
+      if (onSubmit) {
+        onSubmit(values);
+      }
+      console.log('User created and data saved:', user);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error creating user:', error.message);
+        alert(`Registration failed: ${error.message}`);
+      } else {
+        console.error('An unknown error occurred:', error);
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -38,21 +79,23 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       <Formik
         initialValues={initialValues}
         validationSchema={registerValidationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values, actions) => handleSubmit(values, actions)}
       >
-        <Form>
-          <InputField name="name" label="Name" type="text" />
-          <InputField name="email" label="Email" type="email" />
-          <InputField name="password" label="Password" type="password" />
-          <Button
-            type="submit"
-            form
-            variant="filled"
-            className="w-full mt-[22px]"
-          >
-            Log In
-          </Button>
-        </Form>
+        {() => (
+          <Form>
+            <InputField name="name" label="Name" type="text" />
+            <InputField name="email" label="Email" type="email" />
+            <InputField name="password" label="Password" type="password" />
+            <Button
+              type="submit"
+              form
+              variant="filled"
+              className="w-full mt-[22px]"
+            >
+              Sign Up
+            </Button>
+          </Form>
+        )}
       </Formik>
     </div>
   );

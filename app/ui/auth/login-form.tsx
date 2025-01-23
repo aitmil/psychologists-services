@@ -1,9 +1,11 @@
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik, Form } from 'formik';
 
 import InputField from '../input-field';
 import Button from '../button';
-import { loginValidationSchema } from '@/app/utils/validation';
+import { loginValidationSchema } from '@/app/lib/validation';
+import { auth } from '@/app/lib/firebase';
 
 export type LoginFormValues = { email: string; password: string };
 
@@ -14,11 +16,37 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ onSubmit }: LoginFormProps) {
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log('Form values:', values);
+  const router = useRouter();
 
-    if (onSubmit) {
-      onSubmit(values);
+  const handleSubmit = async (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+
+      const user = userCredential.user;
+
+      resetForm();
+
+      router.back();
+
+      if (onSubmit) {
+        onSubmit(values);
+      }
+      console.log('User logged in', user.displayName);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error login user:', error.message);
+        alert(`Login failed: ${error.message}`);
+      } else {
+        console.error('An unknown error occurred:', error);
+        alert('An unknown error occurred.');
+      }
     }
   };
 
