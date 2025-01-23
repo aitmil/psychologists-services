@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 
 import InputField from '../input-field';
 import Button from '../button';
-import { appointmentValidationSchema } from '@/app/utils/validation';
+import { appointmentValidationSchema } from '@/app/lib/validation';
 
 export type AppointmentFormValues = {
   name: string;
