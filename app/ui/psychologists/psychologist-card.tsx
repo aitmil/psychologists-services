@@ -6,25 +6,7 @@ import Image from 'next/image';
 
 import Icon from '../icon';
 import Button from '../button';
-
-interface Review {
-  reviewer: string;
-  rating: number;
-  comment: string;
-}
-
-interface Psychologist {
-  name: string;
-  avatar_url: string;
-  experience: string;
-  reviews: Review[];
-  price_per_hour: number;
-  rating: number;
-  license: string;
-  specialization: string;
-  initial_consultation: string;
-  about: string;
-}
+import { Psychologist } from '@/app/lib/definitions';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
