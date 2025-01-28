@@ -9,7 +9,7 @@ import HeaderBtns from '@/app/ui/header/headerBtns';
 import Logo from '@/app/ui/header/logo';
 import Navigation from '@/app/ui/header/navigation';
 import Container from '@/app/ui/container';
-import { auth } from '@/app/lib/firebase';
+import { auth } from '@/app/lib/firebase/firebase';
 import Icon from '../icon';
 import Button from '../button';
 import { setUser, clearUser } from '@/app/lib/redux/users/slice';

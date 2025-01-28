@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import InputField from '../input-field';
 import Button from '../button';
 import { loginValidationSchema } from '@/app/lib/validation';
-import { auth } from '@/app/lib/firebase';
+import { auth } from '@/app/lib/firebase/firebase';
 
 export type LoginFormValues = { email: string; password: string };
 

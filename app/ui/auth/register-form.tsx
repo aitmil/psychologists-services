@@ -8,7 +8,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import InputField from '../input-field';
 import Button from '../button';
 import { registerValidationSchema } from '@/app/lib/validation';
-import { auth } from '@/app/lib/firebase';
+import { auth } from '@/app/lib/firebase/firebase';
 import { setUser } from '@/app/lib/redux/users/slice';
 
 export type RegisterFormValues = {

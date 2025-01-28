@@ -1,7 +1,14 @@
-import { psychologists } from '@/mock-data';
+import { useSelector } from 'react-redux';
+
 import PsychologistCard from './psychologist-card';
+import { selectPsychologists } from '@/app/lib/redux/psychologists/selectors';
 
 export default function PsychologistsList() {
+  const psychologists = useSelector(selectPsychologists);
+
+  if (!psychologists) {
+    return <p>No psychologists found.</p>;
+  }
   return (
     <ul className="flex flex-col gap-8">
       {psychologists.map((psychologist, index) => (
