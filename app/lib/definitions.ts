@@ -9,6 +9,7 @@ export interface Review {
 }
 
 export interface Psychologist {
+  id: string;
   name: string;
   avatar_url: string;
   experience: string;
