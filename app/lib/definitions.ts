@@ -22,6 +22,12 @@ export interface Psychologist {
   about: string;
 }
 
-export interface PsychologistsList {
-  data: Psychologist[] | null;
+export interface PsychologistState {
+  data: Psychologist[];
+  filter: string;
+}
+
+export interface Filter {
+  id: number;
+  name: string;
 }

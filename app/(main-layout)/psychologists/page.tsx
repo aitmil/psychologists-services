@@ -7,14 +7,19 @@ import Container from '@/app/ui/container';
 import Filters from '@/app/ui/psychologists/filters';
 import PsychologistsList from '@/app/ui/psychologists/psychologists-list';
 import Section from '@/app/ui/section';
-import { setPsychologists } from '@/app/lib/redux/psychologists/slice';
+import {
+  setFilter,
+  setPsychologists,
+} from '@/app/lib/redux/psychologists/slice';
 import { getData } from '@/app/lib/firebase/firebaseService';
-import { selectPsychologists } from '@/app/lib/redux/psychologists/selectors';
+import { selectFilteredPsychologists } from '@/app/lib/redux/psychologists/selectors';
 import Button from '@/app/ui/button';
+import { Filter } from '@/app/lib/definitions';
 
 export default function PsychologistsPage() {
   const dispatch = useDispatch();
-  const psychologists = useSelector(selectPsychologists);
+  const filteredPsychologists = useSelector(selectFilteredPsychologists);
+
   const [loading, setLoading] = useState(false);
   const [lastKey, setLastKey] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
@@ -29,8 +34,10 @@ export default function PsychologistsPage() {
         hasMore: moreAvailable,
       } = await getData(isLoadMore ? lastKey : null, 3);
 
-      if (isLoadMore && psychologists) {
-        dispatch(setPsychologists([...psychologists, ...newPsychologists]));
+      if (isLoadMore && filteredPsychologists) {
+        dispatch(
+          setPsychologists([...filteredPsychologists, ...newPsychologists])
+        );
       } else {
         dispatch(setPsychologists(newPsychologists));
       }
@@ -48,13 +55,17 @@ export default function PsychologistsPage() {
     fetchPsychologists();
   }, []);
 
+  const handleFilterChange = (filter: Filter) => {
+    dispatch(setFilter(filter.name));
+  };
+
   return (
     <Section variant="home">
       <Container>
-        <Filters />
-        <PsychologistsList />
+        <Filters onFilterChange={handleFilterChange} />
+        <PsychologistsList psychologists={filteredPsychologists} />
 
-        {psychologists?.length !== 0 && hasMore && (
+        {filteredPsychologists?.length !== 0 && hasMore && (
           <Button
             type="button"
             onClick={() => fetchPsychologists(true)}

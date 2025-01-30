@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Listbox,
   ListboxButton,
@@ -7,11 +8,10 @@ import {
   ListboxOptions,
 } from '@headlessui/react';
 import clsx from 'clsx';
-import { useState } from 'react';
-
 import Icon from '../icon';
+import { Filter } from '@/app/lib/definitions';
 
-const filters = [
+const filters: Filter[] = [
   { id: 1, name: 'A to Z' },
   { id: 2, name: 'Z to A' },
   { id: 3, name: 'Less than 10$' },
@@ -21,8 +21,17 @@ const filters = [
   { id: 7, name: 'Show all' },
 ];
 
-export default function Filters() {
+interface FiltersProps {
+  onFilterChange: (filter: (typeof filters)[number]) => void;
+}
+
+export default function Filters({ onFilterChange }: FiltersProps) {
   const [selected, setSelected] = useState(filters[0]);
+
+  const handleChange = (filter: Filter) => {
+    setSelected(filter);
+    onFilterChange(filter);
+  };
 
   return (
     <div className="mb-8">
@@ -30,7 +39,7 @@ export default function Filters() {
         Filters
       </h2>
       <div className="w-[226px]">
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox value={selected} onChange={handleChange}>
           <ListboxButton
             className={clsx(
               'relative block w-full border-0 rounded-[14px] bg-orange-light py-[14px] pr-[14px] pl-[18px] text-left text-base leading-[125%] text-main-background transition duration-100',
@@ -53,7 +62,7 @@ export default function Filters() {
           >
             {filters.map(filter => (
               <ListboxOption
-                key={filter.name}
+                key={filter.id}
                 value={filter}
                 className="group flex cursor-default items-center gap-2 py-1 px-[18px] select-none data-[focus]:bg-orange-transparent"
               >
