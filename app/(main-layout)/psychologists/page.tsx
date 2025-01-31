@@ -12,19 +12,24 @@ import {
   setPsychologists,
 } from '@/app/lib/redux/psychologists/slice';
 import { getData } from '@/app/lib/firebase/firebaseService';
-import { selectFilteredPsychologists } from '@/app/lib/redux/psychologists/selectors';
+import {
+  selectCurrentFilter,
+  selectPsychologists,
+} from '@/app/lib/redux/psychologists/selectors';
 import Button from '@/app/ui/button';
 import { Filter } from '@/app/lib/definitions';
 
 export default function PsychologistsPage() {
   const dispatch = useDispatch();
-  const filteredPsychologists = useSelector(selectFilteredPsychologists);
+  const psychologists = useSelector(selectPsychologists);
+  const currentFilter = useSelector(selectCurrentFilter);
 
   const [loading, setLoading] = useState(false);
   const [lastKey, setLastKey] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
 
   const fetchPsychologists = async (isLoadMore: boolean = false) => {
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -32,11 +37,16 @@ export default function PsychologistsPage() {
         psychologists: newPsychologists,
         lastKey: newLastKey,
         hasMore: moreAvailable,
-      } = await getData(isLoadMore ? lastKey : null, 3);
+      } = await getData(currentFilter, isLoadMore ? lastKey : null, 3);
 
-      if (isLoadMore && filteredPsychologists) {
+      if (isLoadMore) {
+        const existingIds = new Set(psychologists.map(p => p.id));
+        const filteredNewPsychologists = newPsychologists.filter(
+          p => !existingIds.has(p.id)
+        );
+
         dispatch(
-          setPsychologists([...filteredPsychologists, ...newPsychologists])
+          setPsychologists([...psychologists, ...filteredNewPsychologists])
         );
       } else {
         dispatch(setPsychologists(newPsychologists));
@@ -52,23 +62,39 @@ export default function PsychologistsPage() {
   };
 
   useEffect(() => {
+    console.log('Initial fetch on component mount');
     fetchPsychologists();
   }, []);
 
+  //   TODO: fix filter state, fetching data now by previous filter and Load more only 2nd page
+
   const handleFilterChange = (filter: Filter) => {
-    dispatch(setFilter(filter.name));
+    if (currentFilter !== filter.name) {
+      console.log(
+        `Filter Changed: currentFilter=${currentFilter}, newFilter=${filter.name}`
+      );
+
+      dispatch(setFilter(filter.name));
+      setLastKey(null);
+      setHasMore(true);
+      dispatch(setPsychologists([]));
+      fetchPsychologists(false);
+    }
   };
 
   return (
     <Section variant="home">
       <Container>
         <Filters onFilterChange={handleFilterChange} />
-        <PsychologistsList psychologists={filteredPsychologists} />
+        <PsychologistsList psychologists={psychologists} />
 
-        {filteredPsychologists?.length !== 0 && hasMore && (
+        {psychologists.length !== 0 && hasMore && (
           <Button
             type="button"
-            onClick={() => fetchPsychologists(true)}
+            onClick={() => {
+              console.log('Load More button clicked');
+              fetchPsychologists(true);
+            }}
             variant="filled"
             className="mt-[64px] mx-auto block"
           >
