@@ -5,3 +5,6 @@ export const selectPsychologists = (state: RootState) =>
 
 export const selectCurrentFilter = (state: RootState) =>
   state.psychologists.filter;
+
+export const selectFavorites = (state: RootState) =>
+  state.psychologists.favorites;

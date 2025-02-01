@@ -4,6 +4,7 @@ import { Psychologist, PsychologistState } from '@/app/lib/definitions';
 const initialState: PsychologistState = {
   data: [],
   filter: 'A to Z',
+  favorites: [],
 };
 
 const psychologistsSlice = createSlice({
@@ -16,8 +17,15 @@ const psychologistsSlice = createSlice({
     setFilter(state, action: PayloadAction<string>) {
       state.filter = action.payload;
     },
+    addFavorite: (state, action: PayloadAction<string>) => {
+      state.favorites.push(action.payload);
+    },
+    removeFavorite: (state, action: PayloadAction<string>) => {
+      state.favorites = state.favorites.filter(id => id !== action.payload);
+    },
   },
 });
 
-export const { setPsychologists, setFilter } = psychologistsSlice.actions;
+export const { setPsychologists, setFilter, addFavorite, removeFavorite } =
+  psychologistsSlice.actions;
 export default psychologistsSlice.reducer;

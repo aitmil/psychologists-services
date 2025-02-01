@@ -25,6 +25,7 @@ export interface Psychologist {
 export interface PsychologistState {
   data: Psychologist[];
   filter: string;
+  favorites: string[];
 }
 
 export interface Filter {
