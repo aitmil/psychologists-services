@@ -1,6 +1,7 @@
 {
   "name": "psychologists-services",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -13,6 +14,7 @@
     "@reduxjs/toolkit": "^2.5.0",
     "clsx": "^2.1.1",
     "firebase": "^11.2.0",
+    "firebase-admin": "^13.1.0",
     "formik": "^2.4.6",
     "next": "15.1.5",
     "react": "^19.0.0",
