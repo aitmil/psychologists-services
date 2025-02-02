@@ -24,7 +24,7 @@ export const getData = async (
     console.log('Fetching psychologists data with filter:', filter);
     console.log('startAfterKey:', startAfterKey);
 
-    const psychologistsRef = ref(db, '/');
+    const psychologistsRef = ref(db, 'psychologists');
     let psychologistsQuery;
     let orderField = 'name';
 
