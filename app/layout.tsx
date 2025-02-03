@@ -8,10 +8,8 @@ import Header from '@/app/ui/header/header';
 import store from '@/app/lib/redux/store';
 import './globals.css';
 
-export const inter = Inter({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
 });
 
 export default function RootLayout({
