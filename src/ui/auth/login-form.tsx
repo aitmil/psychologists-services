@@ -38,7 +38,10 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
       if (onSubmit) {
         onSubmit(values);
       }
-      console.log('User logged in', user.displayName);
+
+      alert(
+        `Welcome back, ${user.displayName}! You are now logged in as a user!`
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error login user:', error.message);

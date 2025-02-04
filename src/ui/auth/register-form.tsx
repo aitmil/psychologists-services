@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-
+import { getDatabase, ref, set } from 'firebase/database';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import { registerValidationSchema } from '@/lib/validation';
@@ -42,6 +42,12 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
       await updateProfile(user, { displayName: values.name });
 
+      const db = getDatabase();
+      await set(ref(db, `users/${user.uid}`), {
+        displayName: values.name,
+        email: values.email,
+      });
+
       dispatch(
         setUser({
           name: values.name,
@@ -55,7 +61,10 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       if (onSubmit) {
         onSubmit(values);
       }
-      console.log('User created and data saved:', user);
+
+      alert(
+        `Welcome, ${user.displayName}! You are now registered and logged in as a user!`
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error creating user:', error.message);
