@@ -49,12 +49,12 @@ const InputField: React.FC<InputFieldProps> = ({
           >
             {passwordVisible ? (
               <Icon
-                name="icon-eye"
+                name="icon-eye-off"
                 className="w-5 h-5 stroke-0 stroke-black fill-white"
               ></Icon>
             ) : (
               <Icon
-                name="icon-eye-off"
+                name="icon-eye"
                 className="w-5 h-5 stroke-0 stroke-black fill-white"
               ></Icon>
             )}
