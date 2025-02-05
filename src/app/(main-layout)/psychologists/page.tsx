@@ -61,7 +61,7 @@ export default function PsychologistsPage() {
   useEffect(() => {
     console.log('Initial fetch on component mount');
     fetchPsychologists();
-  });
+  }, []);
 
   //   TODO: fix filter state, fetching data now by previous filter and Load more only 2nd page
 
