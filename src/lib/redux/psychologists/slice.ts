@@ -18,7 +18,9 @@ const psychologistsSlice = createSlice({
       state.filter = action.payload;
     },
     addFavorite: (state, action: PayloadAction<string>) => {
-      state.favorites.push(action.payload);
+      if (!state.favorites.includes(action.payload)) {
+        state.favorites.push(action.payload);
+      }
     },
     removeFavorite: (state, action: PayloadAction<string>) => {
       state.favorites = state.favorites.filter(id => id !== action.payload);
