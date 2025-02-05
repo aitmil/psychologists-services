@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
-import Icon from '@/ui/icon';
-import Button from '@/ui/button';
+import { ref, get, update } from 'firebase/database';
+import { getAuth } from 'firebase/auth';
+import clsx from 'clsx';
+import Icon from '../icon';
+import Button from '../button';
 import { Psychologist } from '@/lib/definitions';
+
+import { selectFavorites } from '@/lib/redux/psychologists/selectors';
+import { db } from '@/lib/firebase/firebase';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { addFavorite, removeFavorite } from '@/lib/redux/psychologists/slice';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -17,6 +24,71 @@ export default function PsychologistCard({
 }: PsychologistCardProps) {
   const [showReviews, setShowReviews] = useState(false);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const user = getAuth().currentUser;
+  const favoritesState = useAppSelector(selectFavorites);
+  const userFavoritesRef = ref(db, `users/${user?.uid}/favorites`);
+
+  useEffect(() => {
+    if (user) {
+      get(userFavoritesRef).then(snapshot => {
+        if (snapshot.exists()) {
+          // Dispatch to update the Redux state with the user's favorites
+          const favorites = snapshot.val();
+          if (Array.isArray(favorites)) {
+            favorites.forEach((id: string) => {
+              dispatch(addFavorite(id));
+            });
+          }
+        }
+      });
+    }
+  }, [user, dispatch, userFavoritesRef]);
+
+  const handleFavoriteToggle = () => {
+    if (!user) {
+      alert('Please log in to add psychologist to favorites');
+      router.push('/login');
+      return;
+    }
+
+    get(userFavoritesRef)
+      .then(snapshot => {
+        let favorites: string[] = snapshot.val() || [];
+
+        // If the favorites data is an object (nested), convert it to an array
+        if (typeof favorites === 'object' && !Array.isArray(favorites)) {
+          favorites = Object.values(favorites); // Convert to array if it's an object
+        }
+
+        // Check if the psychologist is already in the favorites list
+        if (favorites.includes(psychologist.id)) {
+          // Remove the psychologist from favorites if already added
+          favorites = favorites.filter((id: string) => id !== psychologist.id);
+          dispatch(removeFavorite(psychologist.id)); // Remove from Redux
+        } else {
+          // Add the psychologist to favorites if not already added
+          favorites.push(psychologist.id); // Add to the array
+          dispatch(addFavorite(psychologist.id)); // Add to Redux
+        }
+
+        // Ensure favorites is an array when updating the Firebase database
+        update(userFavoritesRef, { favorites }) // Write the flat array of IDs
+          .catch(error => {
+            console.error('Error updating favorites:', error);
+            alert(
+              'An error occurred while updating your favorites. Please try again later.'
+            );
+          });
+      })
+      .catch(error => {
+        console.error('Error fetching favorites:', error);
+        alert(
+          'An error occurred while retrieving your favorites. Please try again later.'
+        );
+      });
+  };
 
   const handleReadMoreClick = () => {
     setShowReviews(true);
@@ -30,6 +102,8 @@ export default function PsychologistCard({
       </div>
     );
   };
+
+  const isUserFavorite = favoritesState.includes(psychologist.id);
 
   return (
     <>
@@ -65,10 +139,19 @@ export default function PsychologistCard({
                 <p className="text-green">{psychologist.price_per_hour}$</p>
               </li>
             </ul>
-            <Icon
-              name="icon-heart"
-              className="size-[26px] stroke-black fill-transparent"
-            ></Icon>
+            <button
+              type="button"
+              onClick={handleFavoriteToggle}
+              className="focus:outline-hidden, bg-transparent, border-none"
+            >
+              <Icon
+                name="icon-heart"
+                className={clsx('size-[26px]', {
+                  'stroke-black fill-transparent': !isUserFavorite,
+                  'stroke-transparent fill-orange-light': isUserFavorite,
+                })}
+              ></Icon>
+            </button>
           </div>
         </div>
 
