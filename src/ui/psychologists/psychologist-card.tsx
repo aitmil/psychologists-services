@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ref, get, update } from 'firebase/database';
+import { ref, get, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import clsx from 'clsx';
 import Icon from '../icon';
@@ -34,7 +34,6 @@ export default function PsychologistCard({
     if (user) {
       get(userFavoritesRef).then(snapshot => {
         if (snapshot.exists()) {
-          // Dispatch to update the Redux state with the user's favorites
           const favorites = snapshot.val();
           if (Array.isArray(favorites)) {
             favorites.forEach((id: string) => {
@@ -57,30 +56,24 @@ export default function PsychologistCard({
       .then(snapshot => {
         let favorites: string[] = snapshot.val() || [];
 
-        // If the favorites data is an object (nested), convert it to an array
         if (typeof favorites === 'object' && !Array.isArray(favorites)) {
-          favorites = Object.values(favorites); // Convert to array if it's an object
+          favorites = Object.values(favorites);
         }
 
-        // Check if the psychologist is already in the favorites list
         if (favorites.includes(psychologist.id)) {
-          // Remove the psychologist from favorites if already added
-          favorites = favorites.filter((id: string) => id !== psychologist.id);
-          dispatch(removeFavorite(psychologist.id)); // Remove from Redux
+          favorites = favorites.filter(id => id !== psychologist.id);
+          dispatch(removeFavorite(psychologist.id));
         } else {
-          // Add the psychologist to favorites if not already added
-          favorites.push(psychologist.id); // Add to the array
-          dispatch(addFavorite(psychologist.id)); // Add to Redux
+          favorites.push(psychologist.id);
+          dispatch(addFavorite(psychologist.id));
         }
 
-        // Ensure favorites is an array when updating the Firebase database
-        update(userFavoritesRef, { favorites }) // Write the flat array of IDs
-          .catch(error => {
-            console.error('Error updating favorites:', error);
-            alert(
-              'An error occurred while updating your favorites. Please try again later.'
-            );
-          });
+        set(userFavoritesRef, favorites).catch(error => {
+          console.error('Error updating favorites:', error);
+          alert(
+            'An error occurred while updating your favorites. Please try again later.'
+          );
+        });
       })
       .catch(error => {
         console.error('Error fetching favorites:', error);
@@ -92,6 +85,18 @@ export default function PsychologistCard({
 
   const handleReadMoreClick = () => {
     setShowReviews(true);
+  };
+
+  const handleMakeAppointmentClick = () => {
+    if (!user) {
+      alert('Please log in to make an appointment');
+      router.push('/login');
+      return;
+    } else {
+      router.push(`/psychologists/${psychologist.name}/appointment`, {
+        scroll: false,
+      });
+    }
   };
 
   const renderAvatar = (name: string) => {
@@ -221,11 +226,7 @@ export default function PsychologistCard({
             <Button
               type="button"
               variant="filled"
-              onClick={() =>
-                router.push(`/psychologists/${psychologist.name}/appointment`, {
-                  scroll: false,
-                })
-              }
+              onClick={handleMakeAppointmentClick}
             >
               Make an appointment
             </Button>
