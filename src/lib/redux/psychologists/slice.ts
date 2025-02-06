@@ -25,9 +25,18 @@ const psychologistsSlice = createSlice({
     removeFavorite: (state, action: PayloadAction<string>) => {
       state.favorites = state.favorites.filter(id => id !== action.payload);
     },
+
+    clearFavorites: state => {
+      state.favorites = [];
+    },
   },
 });
 
-export const { setPsychologists, setFilter, addFavorite, removeFavorite } =
-  psychologistsSlice.actions;
+export const {
+  setPsychologists,
+  setFilter,
+  addFavorite,
+  removeFavorite,
+  clearFavorites,
+} = psychologistsSlice.actions;
 export default psychologistsSlice.reducer;
