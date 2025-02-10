@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import { appointmentValidationSchema } from '@/lib/validation';
+import TimeField from '../time-field';
 
 export type AppointmentFormValues = {
   name: string;
@@ -53,10 +54,16 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
           <InputField name="name" label="Name" type="text" />
           <div className="flex gap-2">
             <InputField name="phone" label="+380" type="text" />
-            <InputField name="time" label="00:00" type="text" />
+            <TimeField name="time" label="Time" />
           </div>
           <InputField name="email" label="Email" type="email" />
-          <InputField name="comment" label="Comment" type="text" />
+          <InputField
+            name="comment"
+            label="Comment"
+            as="textarea"
+            rows={4}
+            className="h-[116px]"
+          />
           <Button
             type="submit"
             form
