@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Formik, Form } from 'formik';
 
@@ -5,6 +7,10 @@ import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import { appointmentValidationSchema } from '@/lib/validation';
 import TimeField from '../time-field';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
 
 export type AppointmentFormValues = {
   name: string;
@@ -27,6 +33,13 @@ interface AppointmentFormProps {
 }
 
 export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
+  const params = useParams();
+  const { id } = params;
+
+  const psychologist = useAppSelector(selectPsychologists).find(
+    psych => psych.id == id
+  );
+
   const handleSubmit = (values: typeof initialValues) => {
     console.log('Form values:', values);
 
@@ -34,6 +47,10 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
       onSubmit(values);
     }
   };
+
+  if (!psychologist) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-full max-w-[438px]">
@@ -45,6 +62,27 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
         short form below to book your personal appointment with a professional
         psychologist. We guarantee confidentiality and respect for your privacy.
       </p>
+
+      {psychologist && (
+        <div className="flex gap-[14px] mb-10">
+          <Image
+            width={44}
+            height={44}
+            src={psychologist.avatar_url}
+            alt="Photo of psychologist"
+            className="rounded-[15px]"
+          />
+          <div>
+            <h3 className="mb-1 text-[12px] font-medium leading-[133%] text-light-color">
+              Your psychologist
+            </h3>
+            <p className="text-[16px] font-medium leading-[150%] text-black">
+              {psychologist.name}
+            </p>
+          </div>
+        </div>
+      )}
+
       <Formik
         initialValues={initialValues}
         validationSchema={appointmentValidationSchema}
