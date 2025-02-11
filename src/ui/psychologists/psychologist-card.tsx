@@ -93,7 +93,7 @@ export default function PsychologistCard({
       router.push('/login');
       return;
     } else {
-      router.push(`/psychologists/${psychologist.name}/appointment`, {
+      router.push(`/psychologists/${psychologist.id}/appointment`, {
         scroll: false,
       });
     }
