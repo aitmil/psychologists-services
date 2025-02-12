@@ -2,18 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { ref, get, set } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import clsx from 'clsx';
-import Icon from '../icon';
-import Button from '../button';
-import { Psychologist } from '@/lib/definitions';
+import { ref, get, set } from 'firebase/database';
 
-import { selectFavorites } from '@/lib/redux/psychologists/selectors';
+import { Psychologist } from '@/lib/definitions';
 import { db } from '@/lib/firebase/firebase';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { addFavorite, removeFavorite } from '@/lib/redux/psychologists/slice';
+import { selectFavorites } from '@/lib/redux/psychologists/selectors';
+
+import Avatar from '@/ui/psychologists/avatar';
+import FavoriteButton from '@/ui/psychologists/favorite-button';
+import PsychologistDetails from '@/ui/psychologists/psychologist-details';
+import ReviewsSection from '@/ui/psychologists/reviews-section';
+import Button from '@/ui/button';
+import Icon from '../icon';
+import PsychologistInfo from './psychologist-info';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -36,9 +40,7 @@ export default function PsychologistCard({
         if (snapshot.exists()) {
           const favorites = snapshot.val();
           if (Array.isArray(favorites)) {
-            favorites.forEach((id: string) => {
-              dispatch(addFavorite(id));
-            });
+            favorites.forEach((id: string) => dispatch(addFavorite(id)));
           }
         }
       });
@@ -47,7 +49,7 @@ export default function PsychologistCard({
 
   const handleFavoriteToggle = () => {
     if (!user) {
-      alert('Please log in to add psychologist to favorites');
+      alert('Please log in to add a psychologist to favorites');
       router.push('/login');
       return;
     }
@@ -70,57 +72,20 @@ export default function PsychologistCard({
 
         set(userFavoritesRef, favorites).catch(error => {
           console.error('Error updating favorites:', error);
-          alert(
-            'An error occurred while updating your favorites. Please try again later.'
-          );
+          alert('An error occurred while updating your favorites.');
         });
       })
       .catch(error => {
         console.error('Error fetching favorites:', error);
-        alert(
-          'An error occurred while retrieving your favorites. Please try again later.'
-        );
+        alert('An error occurred while retrieving your favorites.');
       });
   };
-
-  const handleReadMoreClick = () => {
-    setShowReviews(true);
-  };
-
-  const handleMakeAppointmentClick = () => {
-    if (!user) {
-      alert('Please log in to make an appointment');
-      router.push('/login');
-      return;
-    } else {
-      router.push(`/psychologists/${psychologist.id}/appointment`, {
-        scroll: false,
-      });
-    }
-  };
-
-  const renderAvatar = (name: string) => {
-    const initial = name.charAt(0).toUpperCase();
-    return (
-      <div className="flex justify-center items-center size-11 rounded-[100px] bg-orange-transparent text-orange-light text-[20px] leading-[100%]">
-        {initial}
-      </div>
-    );
-  };
-
-  const isUserFavorite = favoritesState.includes(psychologist.id);
 
   return (
     <>
       <div className="size-[120px] p-3 border-2 border-orange-transparent rounded-[30px]">
         <div className="relative">
-          <Image
-            width={96}
-            height={96}
-            src={psychologist.avatar_url}
-            alt="Photo of psychologist"
-            className="rounded-[15px]"
-          />
+          <Avatar imageUrl={psychologist.avatar_url} size={96} />
           <Icon
             name="icon-point"
             className="absolute top-0 right-0 w-[14px] h-[14px]"
@@ -131,102 +96,30 @@ export default function PsychologistCard({
         <div className="flex justify-between mb-2">
           <h2>Psychologist</h2>
           <div className="flex gap-[28px] items-center">
-            <ul className="flex text-black">
-              <li className="flex gap-1 items-center">
-                <Icon name="icon-star" className="size-[16px]"></Icon>
-                <h4>Rating:</h4>
-                <p className="pr-[16px]">{psychologist.rating}</p>
-              </li>
-              <li className="flex gap-1 items-center">
-                <h4 className="pl-[16px] border-l-[1px] border-l-primary-base/20">
-                  Price / 1 hour:
-                </h4>
-                <p className="text-green">{psychologist.price_per_hour}$</p>
-              </li>
-            </ul>
-            <button
-              type="button"
+            <PsychologistDetails psychologist={psychologist} />
+            <FavoriteButton
+              isFavorite={favoritesState.includes(psychologist.id)}
               onClick={handleFavoriteToggle}
-              className="focus:outline-hidden, bg-transparent, border-none"
-            >
-              <Icon
-                name="icon-heart"
-                className={clsx('size-[26px]', {
-                  'stroke-black fill-transparent': !isUserFavorite,
-                  'stroke-transparent fill-orange-light': isUserFavorite,
-                })}
-              ></Icon>
-            </button>
+            />
           </div>
         </div>
-
-        <h3 className="mb-6 text-2xl leading-[100%] text-black">
-          {psychologist.name}
-        </h3>
-
-        <ul className="flex flex-wrap gap-x-1 gap-y-2 max-w-[850px] mb-6">
-          <li className="inline-flex items-center gap-1 rounded-3xl py-2 px-4 bg-[#f3f3f3] max-w-max">
-            <h4>Experience:</h4>
-            <p className="text-black">{psychologist.experience}</p>
-          </li>
-          <li className="inline-flex items-center gap-1 rounded-3xl py-2 px-4 bg-[#f3f3f3] max-w-max">
-            <h4>License:</h4>
-            <p className="text-black">{psychologist.license}</p>
-          </li>
-          <li className="inline-flex items-center gap-1 rounded-3xl py-2 px-4 bg-[#f3f3f3] max-w-max">
-            <h4>Specialization:</h4>
-            <p className="text-black">{psychologist.specialization}</p>
-          </li>
-          <li className="inline-flex items-center gap-1 rounded-3xl py-2 px-4 bg-[#f3f3f3] max-w-max">
-            <h4>Initial Consultation:</h4>
-            <p className="text-black">{psychologist.initial_consultation}</p>
-          </li>
-        </ul>
-
-        <p className="mb-[14px] font-normal leading-[125%] text-primary-base/50">
-          {psychologist.about}
-        </p>
-
-        {!showReviews && (
+        <PsychologistInfo psychologist={psychologist} />
+        {!showReviews ? (
           <button
-            onClick={handleReadMoreClick}
-            className="text-black underline decoration-skip-ink-none"
+            onClick={() => setShowReviews(true)}
+            className="text-black underline"
           >
             Read more
           </button>
-        )}
-
-        {showReviews && (
+        ) : (
           <div className="mt-[34px] max-w-[758px]">
-            <ul className="mb-10">
-              {psychologist.reviews.map((review, index) => (
-                <li key={index} className="mb-[25px]">
-                  <div className="flex gap-3">
-                    {renderAvatar(review.reviewer)}
-                    <div>
-                      <p className="leading-[125%] text-black">
-                        {review.reviewer}
-                      </p>
-                      <p className="inline-flex items-center text-sm leading-[129%] text-black">
-                        <Icon
-                          name="icon-star"
-                          className="size-[16px] mr-2"
-                        ></Icon>
-                        {review.rating}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="font-normal leading-[125%] text-primary-base/50 mt-[18px]">
-                    {review.comment}
-                  </p>
-                </li>
-              ))}
-            </ul>
-
+            <ReviewsSection reviews={psychologist.reviews} />
             <Button
               type="button"
               variant="filled"
-              onClick={handleMakeAppointmentClick}
+              onClick={() =>
+                router.push(`/psychologists/${psychologist.id}/appointment`)
+              }
             >
               Make an appointment
             </Button>
