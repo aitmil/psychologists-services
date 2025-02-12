@@ -1,32 +1,21 @@
 'use client';
 
 import React from 'react';
+import { useParams } from 'next/navigation';
 import { Formik, Form } from 'formik';
 
 import InputField from '@/ui/input-field';
+import TimeField from '@/ui/time-field';
 import Button from '@/ui/button';
-import { appointmentValidationSchema } from '@/lib/validation';
-import TimeField from '../time-field';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import Avatar from '@/ui/psychologists/avatar';
+
 import { useAppSelector } from '@/lib/redux/hooks';
+import {
+  appointmentValidationSchema,
+  initialValuesAppointment,
+} from '@/lib/validation';
 import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
-
-export type AppointmentFormValues = {
-  name: string;
-  phone: string;
-  time: string;
-  email: string;
-  comment: string;
-};
-
-const initialValues: AppointmentFormValues = {
-  name: '',
-  phone: '',
-  time: '',
-  email: '',
-  comment: '',
-};
+import { AppointmentFormValues } from '@/lib/definitions';
 
 interface AppointmentFormProps {
   onSubmit?: (values: AppointmentFormValues) => void | Promise<void>;
@@ -40,7 +29,7 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
     psych => psych.id == id
   );
 
-  const handleSubmit = (values: typeof initialValues) => {
+  const handleSubmit = (values: typeof initialValuesAppointment) => {
     console.log('Form values:', values);
 
     if (onSubmit) {
@@ -65,13 +54,7 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
 
       {psychologist && (
         <div className="flex gap-[14px] mb-10">
-          <Image
-            width={44}
-            height={44}
-            src={psychologist.avatar_url}
-            alt="Photo of psychologist"
-            className="rounded-[15px]"
-          />
+          <Avatar imageUrl={psychologist.avatar_url} size={44} />
           <div>
             <h3 className="mb-1 text-[12px] font-medium leading-[133%] text-light-color">
               Your psychologist
@@ -84,7 +67,7 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
       )}
 
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValuesAppointment}
         validationSchema={appointmentValidationSchema}
         onSubmit={handleSubmit}
       >

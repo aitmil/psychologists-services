@@ -7,17 +7,13 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
-import { registerValidationSchema } from '@/lib/validation';
+import {
+  initialValuesRegister,
+  registerValidationSchema,
+} from '@/lib/validation';
 import { auth } from '@/lib/firebase/firebase';
 import { setUser } from '@/lib/redux/users/slice';
-
-export type RegisterFormValues = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-const initialValues: RegisterFormValues = { name: '', email: '', password: '' };
+import { RegisterFormValues } from '@/lib/definitions';
 
 interface RegisterFormProps {
   onSubmit?: (values: RegisterFormValues) => void | Promise<void>;
@@ -28,7 +24,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
   const dispatch = useDispatch();
 
   const handleSubmit = async (
-    values: typeof initialValues,
+    values: typeof initialValuesRegister,
     { resetForm }: { resetForm: () => void }
   ) => {
     try {
@@ -86,7 +82,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
         need some information. Please provide us with the following information.
       </p>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValuesRegister}
         validationSchema={registerValidationSchema}
         onSubmit={(values, actions) => handleSubmit(values, actions)}
       >

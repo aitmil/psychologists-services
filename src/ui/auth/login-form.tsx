@@ -4,12 +4,9 @@ import { Formik, Form } from 'formik';
 
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
-import { loginValidationSchema } from '@/lib/validation';
+import { initialValuesLogin, loginValidationSchema } from '@/lib/validation';
 import { auth } from '@/lib/firebase/firebase';
-
-export type LoginFormValues = { email: string; password: string };
-
-const initialValues: LoginFormValues = { email: '', password: '' };
+import { LoginFormValues } from '@/lib/definitions';
 
 interface LoginFormProps {
   onSubmit?: (values: LoginFormValues) => void | Promise<void>;
@@ -19,7 +16,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
   const router = useRouter();
 
   const handleSubmit = async (
-    values: typeof initialValues,
+    values: typeof initialValuesLogin,
     { resetForm }: { resetForm: () => void }
   ) => {
     try {
@@ -62,7 +59,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
         Welcome back! Please enter your credentials to access your account.
       </p>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValuesLogin}
         validationSchema={loginValidationSchema}
         onSubmit={handleSubmit}
       >

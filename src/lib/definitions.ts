@@ -32,3 +32,19 @@ export interface Filter {
   id: number;
   name: string;
 }
+
+export type AppointmentFormValues = {
+  name: string;
+  phone: string;
+  time: string;
+  email: string;
+  comment: string;
+};
+
+export type RegisterFormValues = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type LoginFormValues = { email: string; password: string };

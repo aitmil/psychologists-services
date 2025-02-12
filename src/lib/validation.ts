@@ -1,4 +1,25 @@
 import * as Yup from 'yup';
+import {
+  AppointmentFormValues,
+  LoginFormValues,
+  RegisterFormValues,
+} from './definitions';
+
+export const initialValuesLogin: LoginFormValues = { email: '', password: '' };
+
+export const initialValuesRegister: RegisterFormValues = {
+  name: '',
+  email: '',
+  password: '',
+};
+
+export const initialValuesAppointment: AppointmentFormValues = {
+  name: '',
+  phone: '',
+  time: '',
+  email: '',
+  comment: '',
+};
 
 export const loginValidationSchema = Yup.object({
   email: Yup.string()
