@@ -53,12 +53,7 @@ export const appointmentValidationSchema = Yup.object({
   phone: Yup.string()
     .matches(/^\+?[0-9]{10,15}$/, 'Phone number is not valid')
     .required('Phone number is required'),
-  time: Yup.string()
-    .matches(
-      /^(?:[01]\d|2[0-3]):[0-5]\d$/,
-      'Time must be in the format HH:mm (24-hour)'
-    )
-    .required('Time is required'),
+  time: Yup.string().required('Time is required'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
