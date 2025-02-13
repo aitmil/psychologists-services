@@ -29,9 +29,10 @@ const availableTimes = [
 interface TimeFieldProps {
   label: string;
   name: string;
+  busyTimes: string[];
 }
 
-const TimeField: React.FC<TimeFieldProps> = ({ name }) => {
+const TimeField: React.FC<TimeFieldProps> = ({ name, busyTimes }) => {
   const [, meta, helpers] = useField(name);
   const [selectedTime, setSelectedTime] = useState(availableTimes[0]);
 
@@ -40,9 +41,13 @@ const TimeField: React.FC<TimeFieldProps> = ({ name }) => {
     helpers.setValue(time);
   };
 
+  const formattedBusyTimes = busyTimes.map(time => time.replace(':', ' : '));
+
+  console.log(formattedBusyTimes);
+
   return (
     <div className="w-full mb-[18px]">
-      <div className="relative w-full h-full">
+      <div className="relative w-full">
         <Listbox value={selectedTime} onChange={handleTimeChange}>
           <ListboxButton
             className={clsx(
@@ -75,9 +80,22 @@ const TimeField: React.FC<TimeFieldProps> = ({ name }) => {
                 <ListboxOption
                   key={time}
                   value={time}
-                  className="group flex cursor-default items-center justify-center gap-2 py-1 px-[18px] select-none data-[focus]:bg-orange-transparent"
+                  disabled={formattedBusyTimes.includes(time)}
+                  className={clsx(
+                    'group flex cursor-default items-center justify-center gap-2 py-1 px-[18px] select-none data-[focus]:bg-orange-transparent',
+                    formattedBusyTimes.includes(time)
+                      ? 'text-light-color'
+                      : 'text-black'
+                  )}
                 >
-                  <div className="text-base leading-[125%] text-black mb-[6px]">
+                  <div
+                    className={clsx(
+                      'text-base leading-[125%] mb-[6px]',
+                      formattedBusyTimes.includes(time)
+                        ? 'text-light-color'
+                        : 'text-black'
+                    )}
+                  >
                     {time}
                   </div>
                 </ListboxOption>

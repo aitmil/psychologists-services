@@ -8,7 +8,7 @@ import Filters from '@/ui/psychologists/filters';
 import PsychologistsList from '@/ui/psychologists/psychologists-list';
 import Section from '@/ui/section';
 import { setFilter, setPsychologists } from '@/lib/redux/psychologists/slice';
-import { getData } from '@/lib/firebase/firebaseService';
+import { getData } from '@/lib/firebase/get-psychologists-service';
 import {
   selectCurrentFilter,
   selectPsychologists,

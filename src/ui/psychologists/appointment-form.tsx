@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Formik, Form } from 'formik';
+import { getAuth } from 'firebase/auth';
 
 import InputField from '@/ui/input-field';
 import TimeField from '@/ui/time-field';
@@ -16,6 +17,13 @@ import {
 } from '@/lib/validation';
 import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
 import { AppointmentFormValues } from '@/lib/definitions';
+import {
+  saveAppointmentToPsychologist,
+  saveAppointmentToUser,
+} from '@/lib/firebase/save-appointment-service';
+import { convertTimeToUTC, trimValuesAppointment } from '@/lib/utils';
+import { get, ref } from 'firebase/database';
+import { db } from '@/lib/firebase/firebase';
 
 interface AppointmentFormProps {
   onSubmit?: (values: AppointmentFormValues) => void | Promise<void>;
@@ -24,22 +32,60 @@ interface AppointmentFormProps {
 export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
   const params = useParams();
   const { id } = params;
+  const [busyTimes, setBusyTimes] = useState<string[]>([]);
 
   const psychologist = useAppSelector(selectPsychologists).find(
     psych => psych.id == id
   );
 
-  const handleSubmit = (values: typeof initialValuesAppointment) => {
-    console.log('Form values:', values);
+  useEffect(() => {
+    const fetchBusyTimes = async () => {
+      const appointmentsRef = ref(db, `psychologists/${id}/appointments`);
+      const snapshot = await get(appointmentsRef);
+      if (snapshot.exists()) {
+        const appointments: { [key: string]: { time: string } } =
+          snapshot.val();
+        const times = Object.values(appointments).map(appointment => {
+          const utcTime = new Date(appointment.time);
+          const localTime = utcTime.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          return localTime;
+        });
+        setBusyTimes(times);
+      }
+    };
 
-    if (onSubmit) {
-      onSubmit(values);
+    fetchBusyTimes();
+  }, [id]);
+
+  const handleSubmit = async (values: typeof initialValuesAppointment) => {
+    const trimmedValues = trimValuesAppointment(values);
+
+    const currentUser = getAuth().currentUser;
+    if (!currentUser) {
+      throw new Error('User is not authenticated');
+    }
+    const userId = currentUser.uid;
+    const timeUTC = convertTimeToUTC(trimmedValues.time);
+
+    try {
+      await Promise.all([
+        saveAppointmentToUser(userId, id as string, timeUTC),
+        saveAppointmentToPsychologist(id as string, userId, timeUTC),
+      ]);
+
+      if (onSubmit) {
+        onSubmit(trimmedValues);
+      }
+
+      alert('Appointment successfully created!');
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      alert('An error occurred while creating the appointment.');
     }
   };
-
-  if (!psychologist) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="w-full max-w-[438px]">
@@ -75,7 +121,7 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
           <InputField name="name" label="Name" type="text" />
           <div className="flex gap-2">
             <InputField name="phone" label="+380" type="text" />
-            <TimeField name="time" label="Time" />
+            <TimeField name="time" label="Time" busyTimes={busyTimes} />
           </div>
           <InputField name="email" label="Email" type="email" />
           <InputField
