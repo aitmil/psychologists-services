@@ -27,6 +27,12 @@
     rgba(105, 0, 0, 1) 80.11%,
     rgba(0, 0, 0, 1) 99.88%
   );
+  --toastify-color-success: #54be96;
+  --toastify-color-warning: #f37113;
+  --toastify-color-error: #f44336;
+  --toastify-progress-color-success: #54be96;
+  --toastify-progress-color-warning: #f37113;
+  --toastify-progress-color-error: #f44336;
 }
 
 body {
@@ -38,4 +44,28 @@ button:hover,
 button:focus {
   outline: none;
   transition: background-color 0.2s ease;
+}
+
+.Toastify__toast--success .Toastify__progress-bar {
+  background: var(--toastify-progress-color-success) !important;
+}
+
+.Toastify__toast--warning .Toastify__progress-bar {
+  background: var(--toastify-progress-color-warning) !important;
+}
+
+.Toastify__toast--error .Toastify__progress-bar {
+  background: var(--toastify-progress-color-error) !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg {
+  fill: var(--toastify-color-success) !important;
+}
+
+.Toastify__toast--warning .Toastify__toast-icon svg {
+  fill: var(--toastify-color-warning) !important;
+}
+
+.Toastify__toast--error .Toastify__toast-icon svg {
+  fill: var(--toastify-color-error) !important;
 }
