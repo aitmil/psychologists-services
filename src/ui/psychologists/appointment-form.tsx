@@ -41,19 +41,31 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
 
   useEffect(() => {
     const fetchBusyTimes = async () => {
+      const today = new Date().toISOString().split('T')[0];
+
       const appointmentsRef = ref(db, `psychologists/${id}/appointments`);
       const snapshot = await get(appointmentsRef);
+
       if (snapshot.exists()) {
         const appointments: { [key: string]: { time: string } } =
           snapshot.val();
-        const times = Object.values(appointments).map(appointment => {
-          const utcTime = new Date(appointment.time);
-          const localTime = utcTime.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
+
+        const times = Object.values(appointments)
+          .filter(appointment => {
+            const appointmentDate = new Date(appointment.time)
+              .toISOString()
+              .split('T')[0];
+            return appointmentDate === today;
+          })
+          .map(appointment => {
+            const utcTime = new Date(appointment.time);
+            const localTime = utcTime.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            });
+            return localTime;
           });
-          return localTime;
-        });
+
         setBusyTimes(times);
       }
     };

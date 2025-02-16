@@ -43,8 +43,6 @@ const TimeField: React.FC<TimeFieldProps> = ({ name, busyTimes }) => {
 
   const formattedBusyTimes = busyTimes.map(time => time.replace(':', ' : '));
 
-  console.log(formattedBusyTimes);
-
   return (
     <div className="w-full mb-[18px]">
       <div className="relative w-full">
