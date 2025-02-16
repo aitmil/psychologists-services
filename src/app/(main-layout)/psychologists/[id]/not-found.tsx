@@ -10,7 +10,7 @@ export default function NotFound() {
         <p className="text-3xl font-bold">404 | Could not found psychologist</p>
         <button
           onClick={() => (window.location.href = '/psychologists')}
-          className="text-3xl font-bold text-orange-dark underline"
+          className="text-2xl font-medium text-orange-dark underline"
         >
           Back to psychologists
         </button>
