@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { ref, get, set } from 'firebase/database';
+import { toast } from 'react-toastify';
 
 import { Psychologist } from '@/lib/definitions';
 import { db } from '@/lib/firebase/firebase';
@@ -49,7 +50,7 @@ export default function PsychologistCard({
 
   const handleFavoriteToggle = () => {
     if (!user) {
-      alert('Please log in to add a psychologist to favorites');
+      toast.warning('Please log in to add a psychologist to favorites');
       router.push('/login');
       return;
     }
@@ -72,13 +73,23 @@ export default function PsychologistCard({
 
         set(userFavoritesRef, favorites).catch(error => {
           console.error('Error updating favorites:', error);
-          alert('An error occurred while updating your favorites.');
+          toast.error('An error occurred while updating your favorites.');
         });
       })
       .catch(error => {
         console.error('Error fetching favorites:', error);
-        alert('An error occurred while retrieving your favorites.');
+        toast.error('An error occurred while retrieving your favorites.');
       });
+  };
+
+  const handleAppointmentClick = () => {
+    if (!user) {
+      toast.warning('Please log in to make an appointment');
+      router.push('/login');
+      return;
+    }
+
+    router.push(`/psychologists/${psychologist.id}/appointment`);
   };
 
   return (
@@ -117,9 +128,7 @@ export default function PsychologistCard({
             <Button
               type="button"
               variant="filled"
-              onClick={() =>
-                router.push(`/psychologists/${psychologist.id}/appointment`)
-              }
+              onClick={handleAppointmentClick}
             >
               Make an appointment
             </Button>

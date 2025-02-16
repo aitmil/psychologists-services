@@ -3,6 +3,7 @@
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 import Header from '@/ui/header/header';
 import store from '@/lib/redux/store';
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Provider store={store}>
           <Header />
           {children}
+          <ToastContainer position="top-right" theme="light" closeOnClick />
         </Provider>
       </body>
     </html>

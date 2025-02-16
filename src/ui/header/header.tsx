@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 import HeaderBtns from '@/ui/header/headerBtns';
 import Logo from '@/ui/header/logo';
@@ -44,8 +45,10 @@ export default function Header() {
       dispatch(clearUser());
       dispatch(clearFavorites());
       router.push('/');
+      toast.success('You have been logged out');
     } catch (error) {
       console.error('Error logging out:', error);
+      toast.error('Error logging out');
     }
   };
 

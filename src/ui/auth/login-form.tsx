@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik, Form } from 'formik';
+import { toast } from 'react-toastify';
 
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
@@ -36,16 +37,16 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
         onSubmit(values);
       }
 
-      alert(
+      toast.success(
         `Welcome back, ${user.displayName}! You are now logged in as a user!`
       );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error login user:', error.message);
-        alert(`Login failed: ${error.message}`);
+        toast.error(`Login failed: ${error.message}`);
       } else {
         console.error('An unknown error occurred:', error);
-        alert('An unknown error occurred.');
+        toast.error('An unknown error occurred.');
       }
     }
   };

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Formik, Form } from 'formik';
 import { getAuth } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 import InputField from '@/ui/input-field';
 import TimeField from '@/ui/time-field';
@@ -80,10 +81,10 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
         onSubmit(trimmedValues);
       }
 
-      alert('Appointment successfully created!');
+      toast.success('Appointment successfully created!');
     } catch (error) {
       console.error('Error creating appointment:', error);
-      alert('An error occurred while creating the appointment.');
+      toast.error('An error occurred while creating the appointment.');
     }
   };
 

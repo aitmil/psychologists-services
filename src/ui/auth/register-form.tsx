@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
+import { toast } from 'react-toastify';
+
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import {
@@ -58,16 +60,16 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
         onSubmit(values);
       }
 
-      alert(
+      toast.success(
         `Welcome, ${user.displayName}! You are now registered and logged in as a user!`
       );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error creating user:', error.message);
-        alert(`Registration failed: ${error.message}`);
+        toast.error(`Registration failed: ${error.message}`);
       } else {
         console.error('An unknown error occurred:', error);
-        alert('An unknown error occurred.');
+        toast.error('An unknown error occurred.');
       }
     }
   };
