@@ -11,7 +11,7 @@ import {
 } from 'firebase/database';
 import { Psychologist } from '@/lib/definitions';
 
-export const getData = async (
+export const fetchAllPsychologists = async (
   filter: string | null = null,
   startAfterKey: string | null = null,
   limit: number = 3
