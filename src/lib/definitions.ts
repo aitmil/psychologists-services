@@ -24,8 +24,12 @@ export interface Psychologist {
 
 export interface PsychologistState {
   data: Psychologist[];
-  filter: string;
+  dataFavorites: Psychologist[];
   favorites: string[];
+  filter: string;
+  lastKey: string | null;
+  hasMore: boolean;
+  isLoading: boolean;
 }
 
 export interface Filter {
