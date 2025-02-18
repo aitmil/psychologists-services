@@ -3,102 +3,92 @@ import {
   ref,
   query,
   orderByChild,
-  startAfter,
   limitToFirst,
   get,
-  startAt,
-  endAt,
+  Query,
+  startAfter,
 } from 'firebase/database';
 import { Psychologist } from '@/lib/definitions';
 
 export const fetchAllPsychologists = async (
   filter: string | null = null,
-  startAfterKey: string | null = null,
+  lastValue: string | number | null = null,
   limit: number = 3
 ): Promise<{
   psychologists: Psychologist[];
-  lastKey: string | null;
+  lastValue: string | number | null;
   hasMore: boolean;
 }> => {
   try {
-    console.log('Fetching psychologists data with filter:', filter);
-    console.log('startAfterKey:', startAfterKey);
+    console.log(
+      `Fetching psychologists with filter: ${filter}, lastValue: ${lastValue}, limit: ${limit}`
+    );
 
     const psychologistsRef = ref(db, 'psychologists');
-    let psychologistsQuery;
-    let orderField = 'name';
+    let psychologistsQuery: Query;
+    let orderField: keyof Psychologist = 'name';
+
+    psychologistsQuery = query(psychologistsRef, limitToFirst(limit + 1));
 
     switch (filter) {
-      case 'A to Z':
+      case 'Name (A to Z)':
         orderField = 'name';
         psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          ...(startAfterKey ? [startAfter(startAfterKey)] : []),
-          limitToFirst(limit + 1)
+          psychologistsQuery,
+          orderByChild(orderField)
         );
         break;
-      case 'Z to A':
+      case 'Name (Z to A)':
         orderField = 'name';
         psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          ...(startAfterKey ? [startAfter(startAfterKey)] : []),
-          limitToFirst(limit + 1)
+          psychologistsQuery,
+          orderByChild(orderField)
         );
         break;
-      case 'Less than 10$':
+      case 'Price: Low to High':
         orderField = 'price_per_hour';
         psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          endAt(10),
-          limitToFirst(limit + 1)
+          psychologistsQuery,
+          orderByChild(orderField)
         );
         break;
-      case 'Greater than 10$':
+      case 'Price: High to Low':
         orderField = 'price_per_hour';
         psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          startAt(10),
-          limitToFirst(limit + 1)
+          psychologistsQuery,
+          orderByChild(orderField)
         );
         break;
-      case 'Popular':
+      case 'Highest rating first':
         orderField = 'rating';
         psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          startAt(4.8),
-          limitToFirst(limit + 1)
+          psychologistsQuery,
+          orderByChild(orderField)
         );
         break;
-      case 'Not popular':
-        orderField = 'rating';
-        psychologistsQuery = query(
-          psychologistsRef,
-          orderByChild(orderField),
-          endAt(4.8),
-          limitToFirst(limit + 1)
-        );
-        break;
-      case 'Show all':
       default:
-        psychologistsQuery = query(psychologistsRef, limitToFirst(limit + 1));
+        orderField = 'name';
+        psychologistsQuery = query(
+          psychologistsQuery,
+          orderByChild(orderField)
+        );
+        break;
     }
 
-    console.log('Constructed Query:', psychologistsQuery);
+    if (lastValue !== null) {
+      console.log(`Starting after lastValue: ${lastValue}`);
+      psychologistsQuery = query(psychologistsQuery, startAfter(lastValue));
+    }
 
     const snapshot = await get(psychologistsQuery);
     const data = snapshot.val();
 
+    console.log('Snapshot:', data);
+
     if (!data) {
       console.log('No data found');
-      return { psychologists: [], lastKey: null, hasMore: false };
+      return { psychologists: [], lastValue: null, hasMore: false };
     }
-
-    console.log('Data:', data);
 
     const psychologistsArray: Psychologist[] = Object.keys(data).map(key => ({
       id: key,
@@ -107,19 +97,56 @@ export const fetchAllPsychologists = async (
 
     console.log('Psychologists array:', psychologistsArray);
 
-    const hasMore = psychologistsArray.length > limit;
+    let filteredPsychologists = [...psychologistsArray];
 
-    console.log('Has more:', hasMore);
+    switch (filter) {
+      case 'Name (A to Z)':
+        filteredPsychologists = filteredPsychologists.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        break;
+      case 'Name (Z to A)':
+        filteredPsychologists = filteredPsychologists.sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
+        break;
+      case 'Price: Low to High':
+        filteredPsychologists = filteredPsychologists.sort(
+          (a, b) => a.price_per_hour - b.price_per_hour
+        );
+        break;
+      case 'Price: High to Low':
+        filteredPsychologists = filteredPsychologists.sort(
+          (a, b) => b.price_per_hour - a.price_per_hour
+        );
+        break;
+      case 'Highest rating first':
+        filteredPsychologists = filteredPsychologists.sort(
+          (a, b) => b.rating - a.rating
+        );
+        break;
+      default:
+        break;
+    }
+
+    console.log('Filtered psychologists:', filteredPsychologists);
+
+    const hasMore = filteredPsychologists.length > limit;
+    const newLastValue = hasMore
+      ? filteredPsychologists[limit - 1]?.name
+      : null;
+
+    console.log(
+      `Returning ${hasMore ? 'more' : 'no more'} psychologists, lastValue: ${
+        newLastValue ?? 'null'
+      }`
+    );
 
     return {
       psychologists: hasMore
-        ? psychologistsArray.slice(0, limit)
-        : psychologistsArray,
-      lastKey: hasMore
-        ? psychologistsArray[limit - 1]?.[
-            orderField as keyof Psychologist
-          ]?.toString() || null
-        : null,
+        ? filteredPsychologists.slice(0, limit)
+        : filteredPsychologists,
+      lastValue: newLastValue,
       hasMore,
     };
   } catch (error) {

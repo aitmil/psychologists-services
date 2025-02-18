@@ -9,7 +9,7 @@ const initialState: PsychologistState = {
   data: [],
   dataFavorites: [],
   favorites: [],
-  filter: 'A to Z',
+  filter: 'Name (A to Z)',
   lastKey: null,
   hasMore: true,
   isLoading: false,
@@ -38,7 +38,12 @@ const psychologistsSlice = createSlice({
         : [...state.favorites, id];
       updateUserFavorites(user.uid, state.favorites);
     },
+    clearPsychologists: state => {
+      state.data = [];
+      state.lastKey = null;
+    },
   },
+
   extraReducers: builder => {
     builder
       .addCase(fetchFavoritesPsychologists.pending, state => {
@@ -63,14 +68,24 @@ const psychologistsSlice = createSlice({
           state,
           action: PayloadAction<{
             psychologists: Psychologist[];
-            lastKey: string | null;
+            lastValue: string | number | null;
             hasMore: boolean;
           }>
         ) => {
-          const { psychologists, lastKey, hasMore } = action.payload;
-          state.data = [...state.data, ...psychologists];
-          state.lastKey = lastKey;
-          state.hasMore = hasMore;
+          console.log('Payload:', action.payload);
+          if (action.payload.psychologists.length > 0) {
+            state.data = [
+              ...state.data,
+              ...action.payload.psychologists.filter(
+                newPsych =>
+                  !state.data.some(
+                    existingPsych => existingPsych.id === newPsych.id
+                  )
+              ),
+            ];
+            state.lastKey = action.payload.lastValue;
+            state.hasMore = action.payload.hasMore;
+          }
           state.isLoading = false;
         }
       )
@@ -80,6 +95,11 @@ const psychologistsSlice = createSlice({
   },
 });
 
-export const { setFilter, setFavorites, clearFavorites, toggleFavorite } =
-  psychologistsSlice.actions;
+export const {
+  setFilter,
+  setFavorites,
+  clearFavorites,
+  toggleFavorite,
+  clearPsychologists,
+} = psychologistsSlice.actions;
 export default psychologistsSlice.reducer;

@@ -17,7 +17,7 @@ import {
 import Button from '@/ui/button';
 import { Filter } from '@/lib/definitions';
 import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
-import { setFilter } from '@/lib/redux/psychologists/slice';
+import { clearPsychologists, setFilter } from '@/lib/redux/psychologists/slice';
 
 export default function PsychologistsPage() {
   const dispatch = useAppDispatch();
@@ -27,13 +27,17 @@ export default function PsychologistsPage() {
   const [currentFilter, selectCurrentFilter] = useState<string>('A to Z');
 
   useEffect(() => {
+    console.log('Fetching psychologists data');
     dispatch(fetchPsychologists());
   }, [dispatch]);
 
   const handleFilterChange = (filter: Filter) => {
+    console.log('Filter changed to:', filter.name);
     if (currentFilter !== filter.name) {
       selectCurrentFilter(filter.name);
       dispatch(setFilter(filter.name));
+      dispatch(clearPsychologists());
+      console.log('Fetching psychologists data with filter:', filter.name);
       dispatch(fetchPsychologists());
     }
   };
