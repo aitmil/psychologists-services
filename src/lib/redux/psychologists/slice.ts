@@ -9,7 +9,7 @@ const initialState: PsychologistState = {
   data: [],
   dataFavorites: [],
   favorites: [],
-  filter: 'Name (A to Z)',
+  sortBy: 'Name (A to Z)',
   lastKey: null,
   hasMore: true,
   isLoading: false,
@@ -19,8 +19,8 @@ const psychologistsSlice = createSlice({
   name: 'psychologists',
   initialState,
   reducers: {
-    setFilter: (state, action: PayloadAction<string>) => {
-      state.filter = action.payload;
+    setSortBy: (state, action: PayloadAction<string>) => {
+      state.sortBy = action.payload;
     },
     setFavorites: (state, action: PayloadAction<string[]>) => {
       state.favorites = action.payload;
@@ -72,7 +72,6 @@ const psychologistsSlice = createSlice({
             hasMore: boolean;
           }>
         ) => {
-          console.log('Payload:', action.payload);
           if (action.payload.psychologists.length > 0) {
             state.data = [
               ...state.data,
@@ -96,7 +95,7 @@ const psychologistsSlice = createSlice({
 });
 
 export const {
-  setFilter,
+  setSortBy,
   setFavorites,
   clearFavorites,
   toggleFavorite,

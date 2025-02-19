@@ -16,4 +16,4 @@ export const selectHasMore = (state: RootState) => state.psychologists.hasMore;
 
 export const selectLastKey = (state: RootState) => state.psychologists.lastKey;
 
-export const selectFilter = (state: RootState) => state.psychologists.filter;
+export const selectSortBy = (state: RootState) => state.psychologists.sortBy;

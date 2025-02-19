@@ -30,8 +30,8 @@ export const fetchPsychologists = createAsyncThunk(
   'psychologists/fetchPsychologists',
   async (_, { getState }) => {
     const state = getState() as { psychologists: PsychologistState };
-    const { filter, lastKey } = state.psychologists;
-    const response = await fetchAllPsychologists(filter, lastKey, 3);
+    const { sortBy, lastKey } = state.psychologists;
+    const response = await fetchAllPsychologists(sortBy, lastKey, 3);
     return response;
   }
 );

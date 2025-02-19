@@ -9,9 +9,9 @@ import {
 } from '@headlessui/react';
 import clsx from 'clsx';
 import Icon from '@/ui/icon';
-import { Filter } from '@/lib/definitions';
+import { SortBy } from '@/lib/definitions';
 
-const filters: Filter[] = [
+const sortBys: SortBy[] = [
   { id: 1, name: 'Name (A to Z)' },
   { id: 2, name: 'Name (Z to A)' },
   { id: 3, name: 'Price: Low to High' },
@@ -19,16 +19,16 @@ const filters: Filter[] = [
   { id: 5, name: 'Highest rating first' },
 ];
 
-interface FiltersProps {
-  onFilterChange: (filter: (typeof filters)[number]) => void;
+interface SortMenuProps {
+  onSortByChange: (sortBy: (typeof sortBys)[number]) => void;
 }
 
-export default function Filters({ onFilterChange }: FiltersProps) {
-  const [selected, setSelected] = useState(filters[0]);
+export default function SortMenu({ onSortByChange }: SortMenuProps) {
+  const [selected, setSelected] = useState(sortBys[0]);
 
-  const handleChange = (filter: Filter) => {
-    setSelected(filter);
-    onFilterChange(filter);
+  const handleChange = (sortBy: SortBy) => {
+    setSelected(sortBy);
+    onSortByChange(sortBy);
   };
 
   return (
@@ -54,14 +54,14 @@ export default function Filters({ onFilterChange }: FiltersProps) {
             'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0'
           )}
         >
-          {filters.map(filter => (
+          {sortBys.map(sortBy => (
             <ListboxOption
-              key={filter.id}
-              value={filter}
+              key={sortBy.id}
+              value={sortBy}
               className="group flex cursor-default items-center gap-2 py-1 px-[18px] select-none data-[focus]:bg-orange-transparent"
             >
               <div className="text-base leading-[125%] text-black">
-                {filter.name}
+                {sortBy.name}
               </div>
             </ListboxOption>
           ))}

@@ -1,43 +1,38 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-
-import Container from '@/ui/container';
-import Filters from '@/ui/psychologists/filters';
-import PsychologistsList from '@/ui/psychologists/psychologists-list';
-import Section from '@/ui/section';
-
+import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
+import { clearPsychologists, setSortBy } from '@/lib/redux/psychologists/slice';
 import {
   selectPsychologists,
   selectIsLoading,
   selectHasMore,
 } from '@/lib/redux/psychologists/selectors';
+import { SortBy } from '@/lib/definitions';
+import Container from '@/ui/container';
+import SortMenu from '@/ui/psychologists/sort-menu';
+import PsychologistsList from '@/ui/psychologists/psychologists-list';
+import Section from '@/ui/section';
 import Button from '@/ui/button';
-import { Filter } from '@/lib/definitions';
-import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
-import { clearPsychologists, setFilter } from '@/lib/redux/psychologists/slice';
 
 export default function PsychologistsPage() {
   const dispatch = useAppDispatch();
   const psychologists = useAppSelector(selectPsychologists);
   const isLoading = useAppSelector(selectIsLoading);
   const hasMore = useAppSelector(selectHasMore);
-  const [currentFilter, selectCurrentFilter] = useState<string>('A to Z');
+  const [currentSortBy, selectCurrentSortBy] =
+    useState<string>('Name (A to Z)');
 
   useEffect(() => {
-    console.log('Fetching psychologists data');
     dispatch(fetchPsychologists());
   }, [dispatch]);
 
-  const handleFilterChange = (filter: Filter) => {
-    console.log('Filter changed to:', filter.name);
-    if (currentFilter !== filter.name) {
-      selectCurrentFilter(filter.name);
-      dispatch(setFilter(filter.name));
+  const handleSortByChange = (sortBy: SortBy) => {
+    if (currentSortBy !== sortBy.name) {
+      selectCurrentSortBy(sortBy.name);
+      dispatch(setSortBy(sortBy.name));
       dispatch(clearPsychologists());
-      console.log('Fetching psychologists data with filter:', filter.name);
       dispatch(fetchPsychologists());
     }
   };
@@ -45,14 +40,13 @@ export default function PsychologistsPage() {
   return (
     <Section variant="home">
       <Container>
-        <Filters onFilterChange={handleFilterChange} />
+        <SortMenu onSortByChange={handleSortByChange} />
         <PsychologistsList psychologists={psychologists} />
 
         {psychologists.length !== 0 && hasMore && (
           <Button
             type="button"
             onClick={() => {
-              console.log('Load More button clicked');
               dispatch(fetchPsychologists());
             }}
             variant="filled"
@@ -60,6 +54,12 @@ export default function PsychologistsPage() {
           >
             {isLoading ? 'Loading...' : 'Load More'}
           </Button>
+        )}
+
+        {!hasMore && psychologists.length !== 0 && (
+          <div className="mt-[64px] mx-auto block text-center">
+            <p>No more psychologists found</p>
+          </div>
         )}
       </Container>
     </Section>

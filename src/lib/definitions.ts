@@ -26,13 +26,13 @@ export interface PsychologistState {
   data: Psychologist[];
   dataFavorites: Psychologist[];
   favorites: string[];
-  filter: string;
-  lastKey: string | null;
+  sortBy: string;
+  lastKey: string | number | null;
   hasMore: boolean;
   isLoading: boolean;
 }
 
-export interface Filter {
+export interface SortBy {
   id: number;
   name: string;
 }
