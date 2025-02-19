@@ -4,14 +4,16 @@ import {
   query,
   orderByChild,
   limitToFirst,
+  limitToLast,
   get,
   Query,
   startAfter,
+  endBefore,
 } from 'firebase/database';
 import { Psychologist } from '@/lib/definitions';
 
 export const fetchAllPsychologists = async (
-  filter: string | null = null,
+  sortBy: string | null = null,
   lastValue: string | number | null = null,
   limit: number = 3
 ): Promise<{
@@ -20,73 +22,61 @@ export const fetchAllPsychologists = async (
   hasMore: boolean;
 }> => {
   try {
-    console.log(
-      `Fetching psychologists with filter: ${filter}, lastValue: ${lastValue}, limit: ${limit}`
-    );
-
     const psychologistsRef = ref(db, 'psychologists');
     let psychologistsQuery: Query;
     let orderField: keyof Psychologist = 'name';
 
-    psychologistsQuery = query(psychologistsRef, limitToFirst(limit + 1));
-
-    switch (filter) {
+    switch (sortBy) {
       case 'Name (A to Z)':
-        orderField = 'name';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
-        break;
       case 'Name (Z to A)':
         orderField = 'name';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
         break;
       case 'Price: Low to High':
-        orderField = 'price_per_hour';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
-        break;
       case 'Price: High to Low':
         orderField = 'price_per_hour';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
         break;
       case 'Highest rating first':
         orderField = 'rating';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
         break;
       default:
         orderField = 'name';
-        psychologistsQuery = query(
-          psychologistsQuery,
-          orderByChild(orderField)
-        );
         break;
     }
 
+    if (
+      sortBy === 'Name (Z to A)' ||
+      sortBy === 'Price: High to Low' ||
+      sortBy === 'Highest rating first'
+    ) {
+      psychologistsQuery = query(
+        psychologistsRef,
+        orderByChild(orderField),
+        limitToLast(limit + 1)
+      );
+    } else {
+      psychologistsQuery = query(
+        psychologistsRef,
+        orderByChild(orderField),
+        limitToFirst(limit + 1)
+      );
+    }
+
     if (lastValue !== null) {
-      console.log(`Starting after lastValue: ${lastValue}`);
-      psychologistsQuery = query(psychologistsQuery, startAfter(lastValue));
+      if (
+        sortBy === 'Name (Z to A)' ||
+        sortBy === 'Price: High to Low' ||
+        sortBy === 'Highest rating first'
+      ) {
+        psychologistsQuery = query(psychologistsQuery, endBefore(lastValue));
+      } else {
+        psychologistsQuery = query(psychologistsQuery, startAfter(lastValue));
+      }
     }
 
     const snapshot = await get(psychologistsQuery);
     const data = snapshot.val();
 
-    console.log('Snapshot:', data);
-
     if (!data) {
-      console.log('No data found');
       return { psychologists: [], lastValue: null, hasMore: false };
     }
 
@@ -95,57 +85,37 @@ export const fetchAllPsychologists = async (
       ...data[key],
     }));
 
-    console.log('Psychologists array:', psychologistsArray);
+    const sortedPsychologists = [...psychologistsArray];
 
-    let filteredPsychologists = [...psychologistsArray];
-
-    switch (filter) {
+    switch (sortBy) {
       case 'Name (A to Z)':
-        filteredPsychologists = filteredPsychologists.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        sortedPsychologists.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'Name (Z to A)':
-        filteredPsychologists = filteredPsychologists.sort((a, b) =>
-          b.name.localeCompare(a.name)
-        );
+        sortedPsychologists.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'Price: Low to High':
-        filteredPsychologists = filteredPsychologists.sort(
-          (a, b) => a.price_per_hour - b.price_per_hour
-        );
+        sortedPsychologists.sort((a, b) => a.price_per_hour - b.price_per_hour);
         break;
       case 'Price: High to Low':
-        filteredPsychologists = filteredPsychologists.sort(
-          (a, b) => b.price_per_hour - a.price_per_hour
-        );
+        sortedPsychologists.sort((a, b) => b.price_per_hour - a.price_per_hour);
         break;
       case 'Highest rating first':
-        filteredPsychologists = filteredPsychologists.sort(
-          (a, b) => b.rating - a.rating
-        );
+        sortedPsychologists.sort((a, b) => b.rating - a.rating);
         break;
       default:
         break;
     }
 
-    console.log('Filtered psychologists:', filteredPsychologists);
-
-    const hasMore = filteredPsychologists.length > limit;
+    const hasMore = sortedPsychologists.length > limit;
     const newLastValue = hasMore
-      ? filteredPsychologists[limit - 1]?.name
+      ? sortedPsychologists[limit - 1]?.[orderField] || null
       : null;
-
-    console.log(
-      `Returning ${hasMore ? 'more' : 'no more'} psychologists, lastValue: ${
-        newLastValue ?? 'null'
-      }`
-    );
 
     return {
       psychologists: hasMore
-        ? filteredPsychologists.slice(0, limit)
-        : filteredPsychologists,
+        ? sortedPsychologists.slice(0, limit)
+        : sortedPsychologists,
       lastValue: newLastValue,
       hasMore,
     };
