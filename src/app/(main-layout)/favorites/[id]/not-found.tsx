@@ -11,7 +11,7 @@ export default function NotFound() {
           404 | Could not found favorites psychologists
         </p>
         <button
-          onClick={() => (window.location.href = '/psychologists')}
+          onClick={() => (window.location.href = '/favorites')}
           className="text-2xl font-medium text-orange-dark underline"
         >
           Back to favorites psychologists
