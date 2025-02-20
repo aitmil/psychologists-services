@@ -1,76 +1,57 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Formik, Form } from 'formik';
 import { getAuth } from 'firebase/auth';
 import { toast } from 'react-toastify';
-
 import InputField from '@/ui/input-field';
 import TimeField from '@/ui/time-field';
 import Button from '@/ui/button';
 import Avatar from '@/ui/psychologists/avatar';
-
 import { useAppSelector } from '@/lib/redux/hooks';
 import {
   appointmentValidationSchema,
   initialValuesAppointment,
 } from '@/lib/validation';
-import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
-import { AppointmentFormValues } from '@/lib/definitions';
+import { selectFavorites } from '@/lib/redux/favorites/selectors';
+import { AppointmentFormValues, Psychologist } from '@/lib/definitions';
 import {
+  fetchBusyTimes,
   saveAppointmentToPsychologist,
-  saveAppointmentToUser,
-} from '@/lib/firebase/save-appointment-service';
+} from '@/lib/firebase/services/psychologists';
+import { saveAppointmentToUser } from '@/lib/firebase/services/user';
 import { convertTimeToUTC, trimValuesAppointment } from '@/lib/utils';
-import { get, ref } from 'firebase/database';
-import { db } from '@/lib/firebase/firebase';
+import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
 
 interface AppointmentFormProps {
   onSubmit?: (values: AppointmentFormValues) => void | Promise<void>;
 }
 
 export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
+  const path = usePathname();
   const params = useParams();
   const { id } = params;
   const [busyTimes, setBusyTimes] = useState<string[]>([]);
 
-  const psychologist = useAppSelector(selectPsychologists).find(
-    psych => psych.id == id
-  );
+  const favorites = useAppSelector(selectFavorites);
+  const psychologists = useAppSelector(selectPsychologists);
+
+  const psychologist: Psychologist | undefined =
+    path === '/favorites'
+      ? favorites.find(psych => psych.id == id)
+      : psychologists.find(psych => psych.id == id);
 
   useEffect(() => {
-    const fetchBusyTimes = async () => {
-      const today = new Date().toISOString().split('T')[0];
-
-      const appointmentsRef = ref(db, `psychologists/${id}/appointments`);
-      const snapshot = await get(appointmentsRef);
-
-      if (snapshot.exists()) {
-        const appointments: { [key: string]: { time: string } } =
-          snapshot.val();
-
-        const times = Object.values(appointments)
-          .filter(appointment => {
-            const appointmentDate = new Date(appointment.time)
-              .toISOString()
-              .split('T')[0];
-            return appointmentDate === today;
-          })
-          .map(appointment => {
-            const utcTime = new Date(appointment.time);
-            const localTime = utcTime.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            });
-            return localTime;
-          });
-
+    const loadBusyTimes = async () => {
+      if (typeof id === 'string') {
+        const times = await fetchBusyTimes(id);
         setBusyTimes(times);
+      } else {
+        console.error('Invalid psychologist ID');
       }
     };
-
-    fetchBusyTimes();
+    loadBusyTimes();
   }, [id]);
 
   const handleSubmit = async (values: typeof initialValuesAppointment) => {
