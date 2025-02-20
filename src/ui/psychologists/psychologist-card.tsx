@@ -15,6 +15,7 @@ import PsychologistInfo from './psychologist-info';
 import { Psychologist } from '@/lib/definitions';
 import { toggleFavorite } from '@/lib/redux/psychologists/slice';
 import { fetchFavorites } from '@/lib/redux/psychologists/operations';
+import { selectFavorites } from '@/lib/redux/psychologists/selectors';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -26,7 +27,7 @@ export default function PsychologistCard({
   const [showReviews, setShowReviews] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const favoritesState = useAppSelector(state => state.psychologists.favorites);
+  const favoritesState = useAppSelector(selectFavorites);
   const user = getAuth().currentUser;
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function PsychologistCard({
       router.push('/login');
       return;
     }
-    dispatch(toggleFavorite(psychologist.id));
+    dispatch(toggleFavorite(psychologist));
   };
 
   const handleAppointmentClick = () => {
@@ -68,7 +69,9 @@ export default function PsychologistCard({
           <div className="flex gap-[28px] items-center">
             <PsychologistDetails psychologist={psychologist} />
             <FavoriteButton
-              isFavorite={favoritesState.includes(psychologist.id)}
+              isFavorite={favoritesState.some(
+                fav => fav.id === psychologist.id
+              )}
               onClick={handleFavoriteToggle}
             />
           </div>

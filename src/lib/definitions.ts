@@ -24,8 +24,7 @@ export interface Psychologist {
 
 export interface PsychologistState {
   data: Psychologist[];
-  dataFavorites: Psychologist[];
-  favorites: string[];
+  favorites: Psychologist[];
   sortBy: string;
   lastKey: string | number | null;
   hasMore: boolean;

@@ -7,7 +7,7 @@ import { clearPsychologists, setSortBy } from '@/lib/redux/psychologists/slice';
 import {
   selectIsLoading,
   selectHasMore,
-  selectFavoritePsychologists,
+  selectFavorites,
 } from '@/lib/redux/psychologists/selectors';
 import { SortBy } from '@/lib/definitions';
 import Container from '@/ui/container';
@@ -18,7 +18,7 @@ import Button from '@/ui/button';
 
 export default function PsychologistsPage() {
   const dispatch = useAppDispatch();
-  const psychologists = useAppSelector(selectFavoritePsychologists);
+  const psychologists = useAppSelector(selectFavorites);
   const isLoading = useAppSelector(selectIsLoading);
   const hasMore = useAppSelector(selectHasMore);
   const [currentSortBy, selectCurrentSortBy] =

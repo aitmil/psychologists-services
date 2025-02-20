@@ -3,9 +3,6 @@ import { RootState } from '@/lib/redux/store';
 export const selectPsychologists = (state: RootState) =>
   state.psychologists.data;
 
-export const selectFavoritePsychologists = (state: RootState) =>
-  state.psychologists.dataFavorites;
-
 export const selectFavorites = (state: RootState) =>
   state.psychologists.favorites;
 

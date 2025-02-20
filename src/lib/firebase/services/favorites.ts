@@ -2,7 +2,9 @@ import { get, set, ref } from 'firebase/database';
 import { db } from '@/lib/firebase/firebase';
 import { Psychologist } from '@/lib/definitions';
 
-export const getUserFavorites = async (userId: string): Promise<string[]> => {
+export const getUserFavorites = async (
+  userId: string
+): Promise<Psychologist[]> => {
   if (!userId) return [];
   const userFavoritesRef = ref(db, `users/${userId}/favorites`);
   const snapshot = await get(userFavoritesRef);
@@ -11,7 +13,7 @@ export const getUserFavorites = async (userId: string): Promise<string[]> => {
 
 export const updateUserFavorites = async (
   userId: string,
-  favorites: string[]
+  favorites: Psychologist[]
 ): Promise<void> => {
   if (!userId) return;
   const userFavoritesRef = ref(db, `users/${userId}/favorites`);
