@@ -41,7 +41,14 @@ export default function PsychologistsPage() {
     <Section variant="home">
       <Container>
         <SortMenu onSortByChange={handleSortByChange} />
-        <PsychologistsList psychologists={psychologists} />
+
+        {psychologists.length === 0 && !isLoading ? (
+          <p className="text-center text-xl">
+            No psychologists have been added to favorites
+          </p>
+        ) : (
+          <PsychologistsList psychologists={psychologists} />
+        )}
 
         {psychologists.length !== 0 && hasMore ? (
           <Button
