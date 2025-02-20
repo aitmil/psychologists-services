@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-
 import Avatar from '@/ui/psychologists/avatar';
 import FavoriteButton from '@/ui/psychologists/favorite-button';
 import PsychologistDetails from '@/ui/psychologists/psychologist-details';
@@ -13,9 +12,9 @@ import Button from '@/ui/button';
 import Icon from '../icon';
 import PsychologistInfo from './psychologist-info';
 import { Psychologist } from '@/lib/definitions';
-import { toggleFavorite } from '@/lib/redux/psychologists/slice';
-import { fetchFavorites } from '@/lib/redux/psychologists/operations';
-import { selectFavorites } from '@/lib/redux/psychologists/selectors';
+import { toggleFavorite } from '@/lib/redux/favorites/slice';
+import { selectFavorites } from '@/lib/redux/favorites/selectors';
+import { fetchFavoritesData } from '@/lib/redux/favorites/operations';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -26,12 +25,13 @@ export default function PsychologistCard({
 }: PsychologistCardProps) {
   const [showReviews, setShowReviews] = useState(false);
   const router = useRouter();
+  const path = usePathname();
   const dispatch = useAppDispatch();
   const favoritesState = useAppSelector(selectFavorites);
   const user = getAuth().currentUser;
 
   useEffect(() => {
-    if (user) dispatch(fetchFavorites());
+    if (user) dispatch(fetchFavoritesData());
   }, [user, dispatch]);
 
   const handleFavoriteToggle = () => {
@@ -48,8 +48,13 @@ export default function PsychologistCard({
       toast.warning('Please log in to make an appointment');
       router.push('/login');
       return;
+    } else {
+      if (path === '/favorites') {
+        router.push(`/favorites/${psychologist.id}/appointment`);
+      } else {
+        router.push(`/psychologists/${psychologist.id}/appointment`);
+      }
     }
-    router.push(`/psychologists/${psychologist.id}/appointment`);
   };
 
   return (

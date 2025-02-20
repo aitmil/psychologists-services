@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
-import { clearPsychologists, setSortBy } from '@/lib/redux/psychologists/slice';
+import { clearData, setSortBy } from '@/lib/redux/psychologists/slice';
 import {
   selectPsychologists,
   selectIsLoading,
@@ -32,7 +32,7 @@ export default function PsychologistsPage() {
     if (currentSortBy !== sortBy.name) {
       selectCurrentSortBy(sortBy.name);
       dispatch(setSortBy(sortBy.name));
-      dispatch(clearPsychologists());
+      dispatch(clearData());
       dispatch(fetchPsychologists());
     }
   };
@@ -43,7 +43,7 @@ export default function PsychologistsPage() {
         <SortMenu onSortByChange={handleSortByChange} />
         <PsychologistsList psychologists={psychologists} />
 
-        {psychologists.length !== 0 && hasMore && (
+        {psychologists.length !== 0 && hasMore ? (
           <Button
             type="button"
             onClick={() => {
@@ -54,9 +54,7 @@ export default function PsychologistsPage() {
           >
             {isLoading ? 'Loading...' : 'Load More'}
           </Button>
-        )}
-
-        {!hasMore && psychologists.length !== 0 && (
+        ) : (
           <div className="mt-[64px] mx-auto block text-center">
             <p>No more psychologists found</p>
           </div>

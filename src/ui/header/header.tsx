@@ -14,7 +14,7 @@ import { auth } from '@/lib/firebase/firebase';
 import Icon from '@/ui/icon';
 import Button from '@/ui/button';
 import { setUser, clearUser } from '@/lib/redux/users/slice';
-import { clearFavorites } from '@/lib/redux/psychologists/slice';
+import { clearData } from '@/lib/redux/favorites/slice';
 import { selectUser } from '@/lib/redux/users/selectors';
 
 export default function Header() {
@@ -43,7 +43,7 @@ export default function Header() {
     try {
       await signOut(auth);
       dispatch(clearUser());
-      dispatch(clearFavorites());
+      dispatch(clearData());
       router.push('/');
       toast.success('You have been logged out');
     } catch (error) {

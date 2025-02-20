@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Psychologist, PsychologistsState } from '@/lib/definitions';
-import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
+import { getAuth } from 'firebase/auth';
+import { updateUserFavorites } from '@/lib/firebase/services/user';
+import { FavoritesState, Psychologist } from '@/lib/definitions';
+import { fetchFavoritesData } from '@/lib/redux/favorites/operations';
 
-const initialState: PsychologistsState = {
+const initialState: FavoritesState = {
   data: [],
   sortBy: 'Name (A to Z)',
   lastKey: null,
@@ -10,12 +12,22 @@ const initialState: PsychologistsState = {
   isLoading: false,
 };
 
-const psychologistsSlice = createSlice({
-  name: 'psychologists',
+const favoritesSlice = createSlice({
+  name: 'favorites',
   initialState,
   reducers: {
     setSortBy: (state, action: PayloadAction<string>) => {
       state.sortBy = action.payload;
+    },
+    toggleFavorite: (state, action: PayloadAction<Psychologist>) => {
+      const user = getAuth().currentUser;
+      if (!user) return;
+      const psychologist = action.payload;
+      const isFavorite = state.data.some(fav => fav.id === psychologist.id);
+      state.data = isFavorite
+        ? state.data.filter(fav => fav.id !== psychologist.id)
+        : [...state.data, psychologist];
+      updateUserFavorites(user.uid, state.data);
     },
     clearData: state => {
       state.data = [];
@@ -25,11 +37,11 @@ const psychologistsSlice = createSlice({
 
   extraReducers: builder => {
     builder
-      .addCase(fetchPsychologists.pending, state => {
+      .addCase(fetchFavoritesData.pending, state => {
         state.isLoading = true;
       })
       .addCase(
-        fetchPsychologists.fulfilled,
+        fetchFavoritesData.fulfilled,
         (
           state,
           action: PayloadAction<{
@@ -54,11 +66,11 @@ const psychologistsSlice = createSlice({
           state.isLoading = false;
         }
       )
-      .addCase(fetchPsychologists.rejected, state => {
+      .addCase(fetchFavoritesData.rejected, state => {
         state.isLoading = false;
       });
   },
 });
 
-export const { setSortBy, clearData } = psychologistsSlice.actions;
-export default psychologistsSlice.reducer;
+export const { setSortBy, toggleFavorite, clearData } = favoritesSlice.actions;
+export default favoritesSlice.reducer;

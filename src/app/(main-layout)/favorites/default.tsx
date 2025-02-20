@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-import { fetchFavoritesPsychologists } from '@/lib/redux/psychologists/operations';
-import { clearPsychologists, setSortBy } from '@/lib/redux/psychologists/slice';
+import { fetchFavoritesData } from '@/lib/redux/favorites/operations';
+import { clearData, setSortBy } from '@/lib/redux/favorites/slice';
 import {
   selectIsLoading,
   selectHasMore,
   selectFavorites,
-} from '@/lib/redux/psychologists/selectors';
+} from '@/lib/redux/favorites/selectors';
 import { SortBy } from '@/lib/definitions';
 import Container from '@/ui/container';
 import SortMenu from '@/ui/psychologists/sort-menu';
@@ -25,15 +25,15 @@ export default function PsychologistsPage() {
     useState<string>('Name (A to Z)');
 
   useEffect(() => {
-    dispatch(fetchFavoritesPsychologists());
-  }, []);
+    dispatch(fetchFavoritesData());
+  }, [dispatch]);
 
   const handleSortByChange = (sortBy: SortBy) => {
     if (currentSortBy !== sortBy.name) {
       selectCurrentSortBy(sortBy.name);
       dispatch(setSortBy(sortBy.name));
-      dispatch(clearPsychologists());
-      dispatch(fetchFavoritesPsychologists());
+      dispatch(clearData());
+      dispatch(fetchFavoritesData());
     }
   };
 
@@ -43,17 +43,21 @@ export default function PsychologistsPage() {
         <SortMenu onSortByChange={handleSortByChange} />
         <PsychologistsList psychologists={psychologists} />
 
-        {psychologists.length !== 0 && hasMore && (
+        {psychologists.length !== 0 && hasMore ? (
           <Button
             type="button"
             onClick={() => {
-              dispatch(fetchFavoritesPsychologists());
+              dispatch(fetchFavoritesData());
             }}
             variant="filled"
             className="mt-[64px] mx-auto block"
           >
             {isLoading ? 'Loading...' : 'Load More'}
           </Button>
+        ) : (
+          <div className="mt-[64px] mx-auto block text-center">
+            <p>No more psychologists found</p>
+          </div>
         )}
       </Container>
     </Section>

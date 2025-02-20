@@ -22,9 +22,16 @@ export interface Psychologist {
   about: string;
 }
 
-export interface PsychologistState {
+export interface PsychologistsState {
   data: Psychologist[];
-  favorites: Psychologist[];
+  sortBy: string;
+  lastKey: string | number | null;
+  hasMore: boolean;
+  isLoading: boolean;
+}
+
+export interface FavoritesState {
+  data: Psychologist[];
   sortBy: string;
   lastKey: string | number | null;
   hasMore: boolean;

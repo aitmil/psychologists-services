@@ -9,21 +9,24 @@ import {
   Query,
   startAfter,
   endBefore,
+  push,
+  set,
 } from 'firebase/database';
 import { Psychologist } from '@/lib/definitions';
 
-export const fetchAllPsychologists = async (
+export const fetchData = async (
+  path: string,
   sortBy: string | null = null,
   lastValue: string | number | null = null,
   limit: number = 3
 ): Promise<{
-  psychologists: Psychologist[];
+  data: Psychologist[];
   lastValue: string | number | null;
   hasMore: boolean;
 }> => {
   try {
-    const psychologistsRef = ref(db, 'psychologists');
-    let psychologistsQuery: Query;
+    const dataRef = ref(db, path);
+    let dataQuery: Query;
     let orderField: keyof Psychologist = 'name';
 
     switch (sortBy) {
@@ -48,14 +51,14 @@ export const fetchAllPsychologists = async (
       sortBy === 'Price: High to Low' ||
       sortBy === 'Highest rating first'
     ) {
-      psychologistsQuery = query(
-        psychologistsRef,
+      dataQuery = query(
+        dataRef,
         orderByChild(orderField),
         limitToLast(limit + 1)
       );
     } else {
-      psychologistsQuery = query(
-        psychologistsRef,
+      dataQuery = query(
+        dataRef,
         orderByChild(orderField),
         limitToFirst(limit + 1)
       );
@@ -67,55 +70,57 @@ export const fetchAllPsychologists = async (
         sortBy === 'Price: High to Low' ||
         sortBy === 'Highest rating first'
       ) {
-        psychologistsQuery = query(psychologistsQuery, endBefore(lastValue));
+        dataQuery = query(dataQuery, endBefore(lastValue));
       } else {
-        psychologistsQuery = query(psychologistsQuery, startAfter(lastValue));
+        dataQuery = query(dataQuery, startAfter(lastValue));
       }
     }
 
-    const snapshot = await get(psychologistsQuery);
+    const snapshot = await get(dataQuery);
     const data = snapshot.val();
 
     if (!data) {
-      return { psychologists: [], lastValue: null, hasMore: false };
+      return {
+        data: [],
+        lastValue: null,
+        hasMore: false,
+      };
     }
 
-    const psychologistsArray: Psychologist[] = Object.keys(data).map(key => ({
+    const dataArray: Psychologist[] = Object.keys(data).map(key => ({
       id: key,
       ...data[key],
     }));
 
-    const sortedPsychologists = [...psychologistsArray];
+    const sortedData = [...dataArray];
 
     switch (sortBy) {
       case 'Name (A to Z)':
-        sortedPsychologists.sort((a, b) => a.name.localeCompare(b.name));
+        sortedData.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'Name (Z to A)':
-        sortedPsychologists.sort((a, b) => b.name.localeCompare(a.name));
+        sortedData.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'Price: Low to High':
-        sortedPsychologists.sort((a, b) => a.price_per_hour - b.price_per_hour);
+        sortedData.sort((a, b) => a.price_per_hour - b.price_per_hour);
         break;
       case 'Price: High to Low':
-        sortedPsychologists.sort((a, b) => b.price_per_hour - a.price_per_hour);
+        sortedData.sort((a, b) => b.price_per_hour - a.price_per_hour);
         break;
       case 'Highest rating first':
-        sortedPsychologists.sort((a, b) => b.rating - a.rating);
+        sortedData.sort((a, b) => b.rating - a.rating);
         break;
       default:
         break;
     }
 
-    const hasMore = sortedPsychologists.length > limit;
+    const hasMore = sortedData.length > limit;
     const newLastValue = hasMore
-      ? sortedPsychologists[limit - 1]?.[orderField] || null
+      ? sortedData[limit - 1]?.[orderField] || null
       : null;
 
     return {
-      psychologists: hasMore
-        ? sortedPsychologists.slice(0, limit)
-        : sortedPsychologists,
+      data: hasMore ? sortedData.slice(0, limit) : sortedData,
       lastValue: newLastValue,
       hasMore,
     };
@@ -123,4 +128,56 @@ export const fetchAllPsychologists = async (
     console.error('Error getting data:', error);
     throw error;
   }
+};
+
+export const saveAppointmentToPsychologist = async (
+  psychologistId: string,
+  userId: string,
+  time: string
+): Promise<void> => {
+  const appointmentsRef = ref(
+    db,
+    `psychologists/${psychologistId}/appointments`
+  );
+  const newAppointmentRef = push(appointmentsRef);
+  await set(newAppointmentRef, {
+    userId,
+    time,
+  });
+};
+
+export const fetchBusyTimes = async (
+  psychologistId: string
+): Promise<string[]> => {
+  const today = new Date().toISOString().split('T')[0];
+
+  const appointmentsRef = ref(
+    db,
+    `psychologists/${psychologistId}/appointments`
+  );
+  const snapshot = await get(appointmentsRef);
+
+  if (snapshot.exists()) {
+    const appointments: { [key: string]: { time: string } } = snapshot.val();
+
+    const times = Object.values(appointments)
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.time)
+          .toISOString()
+          .split('T')[0];
+        return appointmentDate === today;
+      })
+      .map(appointment => {
+        const utcTime = new Date(appointment.time);
+        const localTime = utcTime.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+        return localTime;
+      });
+
+    return times;
+  }
+
+  return [];
 };
