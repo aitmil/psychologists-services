@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getAuth } from 'firebase/auth';
 import {
-  fetchPsychologistsData,
   getUserFavorites,
+  getUserFavoritesData,
 } from '@/lib/firebase/services/favorites';
 import { fetchAllPsychologists } from '@/lib/firebase/services/psychologists';
-import { getAuth } from 'firebase/auth';
 import { PsychologistState } from '@/lib/definitions';
 import { setFavorites } from './slice';
 
@@ -21,8 +21,15 @@ export const fetchFavorites = createAsyncThunk(
 
 export const fetchFavoritesPsychologists = createAsyncThunk(
   'psychologists/fetchFavoritesPsychologists',
-  async () => {
-    return await fetchPsychologistsData();
+  async (_, { getState }) => {
+    const user = getAuth().currentUser;
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+    const state = getState() as { psychologists: PsychologistState };
+    const { sortBy } = state.psychologists;
+    const response = await getUserFavoritesData(user.uid, sortBy, 3);
+    return response;
   }
 );
 

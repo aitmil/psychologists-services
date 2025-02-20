@@ -40,6 +40,7 @@ const psychologistsSlice = createSlice({
     },
     clearPsychologists: state => {
       state.data = [];
+      state.dataFavorites = [];
       state.lastKey = null;
     },
   },
@@ -51,8 +52,28 @@ const psychologistsSlice = createSlice({
       })
       .addCase(
         fetchFavoritesPsychologists.fulfilled,
-        (state, action: PayloadAction<Psychologist[]>) => {
-          state.dataFavorites = action.payload;
+        (
+          state,
+          action: PayloadAction<{
+            psychologists: Psychologist[];
+            lastValue: string | number | null;
+            hasMore: boolean;
+          }>
+        ) => {
+          if (action.payload.psychologists.length > 0) {
+            state.dataFavorites = [
+              ...state.dataFavorites,
+              ...action.payload.psychologists.filter(
+                newPsych =>
+                  !state.dataFavorites.some(
+                    existingPsych => existingPsych.id === newPsych.id
+                  )
+              ),
+            ];
+            state.lastKey = action.payload.lastValue;
+            state.hasMore = action.payload.hasMore;
+            console.log('payload fabvourites', action.payload);
+          }
           state.isLoading = false;
         }
       )
@@ -84,6 +105,7 @@ const psychologistsSlice = createSlice({
             ];
             state.lastKey = action.payload.lastValue;
             state.hasMore = action.payload.hasMore;
+            console.log('payload', action.payload);
           }
           state.isLoading = false;
         }
