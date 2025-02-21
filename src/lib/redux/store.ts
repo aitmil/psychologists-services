@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from '@/lib/redux/users/slice';
+import userReducer from '@/lib/redux/auth/slice';
 import psychologistsReducer from '@/lib/redux/psychologists/slice';
 import favoritesReducer from '@/lib/redux/favorites/slice';
 

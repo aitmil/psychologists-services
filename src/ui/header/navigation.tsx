@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
-import { selectUser } from '@/lib/redux/users/selectors';
+import { selectUser } from '@/lib/redux/auth/selectors';
 
 const links = [
   { name: 'Home', href: '/' },

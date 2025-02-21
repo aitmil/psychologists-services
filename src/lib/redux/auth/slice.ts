@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { User } from '@/lib/definitions';
+import { User, UserState } from '@/lib/definitions';
 
-const initialState: User = {
+const initialState: UserState = {
   user: null,
 };
 
@@ -10,10 +10,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(
-      state,
-      action: PayloadAction<{ name: string; email: string } | null>
-    ) {
+    setUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
     },
     clearUser(state) {

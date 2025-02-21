@@ -1,46 +1,46 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
-import { getAuth } from 'firebase/auth';
 import { toast } from 'react-toastify';
+import Avatar from '@/ui/psychologists/avatar';
 import InputField from '@/ui/input-field';
 import TimeField from '@/ui/time-field';
 import Button from '@/ui/button';
-import Avatar from '@/ui/psychologists/avatar';
-import { useAppSelector } from '@/lib/redux/hooks';
-import {
-  appointmentValidationSchema,
-  initialValuesAppointment,
-} from '@/lib/validation';
-import { selectFavorites } from '@/lib/redux/favorites/selectors';
-import { AppointmentFormValues, Psychologist } from '@/lib/definitions';
+import { SmallCardSkeleton } from '@/ui/skeletons';
+import { selectPsychologist } from '@/lib/redux/psychologists/selectors';
+import { fetchPsychologist } from '@/lib/redux/psychologists/operations';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { saveAppointmentToUser } from '@/lib/firebase/services/user';
 import {
   fetchBusyTimes,
   saveAppointmentToPsychologist,
 } from '@/lib/firebase/services/psychologists';
-import { saveAppointmentToUser } from '@/lib/firebase/services/user';
 import { convertTimeToUTC, trimValuesAppointment } from '@/lib/utils';
-import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
+import { AppointmentFormValues } from '@/lib/definitions';
+import {
+  appointmentValidationSchema,
+  initialValuesAppointment,
+} from '@/lib/validation';
+import { getAuth } from 'firebase/auth';
 
 interface AppointmentFormProps {
   onSubmit?: (values: AppointmentFormValues) => void | Promise<void>;
 }
 
 export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
-  const path = usePathname();
   const params = useParams();
   const { id } = params;
   const [busyTimes, setBusyTimes] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  const favorites = useAppSelector(selectFavorites);
-  const psychologists = useAppSelector(selectPsychologists);
+  useEffect(() => {
+    dispatch(fetchPsychologist(id as string));
+  }, [dispatch, id]);
 
-  const psychologist: Psychologist | undefined =
-    path === '/favorites'
-      ? favorites.find(psych => psych.id == id)
-      : psychologists.find(psych => psych.id == id);
+  const { psychologist, loading } = useAppSelector(selectPsychologist);
 
   useEffect(() => {
     const loadBusyTimes = async () => {
@@ -56,7 +56,6 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
 
   const handleSubmit = async (values: typeof initialValuesAppointment) => {
     const trimmedValues = trimValuesAppointment(values);
-
     const currentUser = getAuth().currentUser;
     if (!currentUser) {
       throw new Error('User is not authenticated');
@@ -74,10 +73,12 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
         onSubmit(trimmedValues);
       }
 
+      router.replace('/');
+
       toast.success('Appointment successfully created!');
     } catch (error) {
       console.error('Error creating appointment:', error);
-      toast.error('An error occurred while creating the appointment.');
+      toast.error('An error occurred while creating the appointment');
     }
   };
 
@@ -92,7 +93,8 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
         psychologist. We guarantee confidentiality and respect for your privacy.
       </p>
 
-      {psychologist && (
+      {loading && !psychologist && <SmallCardSkeleton />}
+      {!loading && psychologist && (
         <div className="flex gap-[14px] mb-10">
           <Avatar imageUrl={psychologist.avatar_url} size={44} />
           <div>

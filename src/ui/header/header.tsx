@@ -13,9 +13,9 @@ import Container from '@/ui/container';
 import { auth } from '@/lib/firebase/firebase';
 import Icon from '@/ui/icon';
 import Button from '@/ui/button';
-import { setUser, clearUser } from '@/lib/redux/users/slice';
+import { setUser, clearUser } from '@/lib/redux/auth/slice';
 import { clearData } from '@/lib/redux/favorites/slice';
-import { selectUser } from '@/lib/redux/users/selectors';
+import { selectUser } from '@/lib/redux/auth/selectors';
 
 export default function Header() {
   const router = useRouter();

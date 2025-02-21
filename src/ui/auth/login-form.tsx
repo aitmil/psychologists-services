@@ -1,8 +1,6 @@
-import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik, Form } from 'formik';
 import { toast } from 'react-toastify';
-
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import { initialValuesLogin, loginValidationSchema } from '@/lib/validation';
@@ -14,8 +12,6 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ onSubmit }: LoginFormProps) {
-  const router = useRouter();
-
   const handleSubmit = async (
     values: typeof initialValuesLogin,
     { resetForm }: { resetForm: () => void }
@@ -28,10 +24,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
       );
 
       const user = userCredential.user;
-
       resetForm();
-
-      router.back();
 
       if (onSubmit) {
         onSubmit(values);
