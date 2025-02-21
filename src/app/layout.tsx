@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-
+import { AuthProvider } from '@/context/auth-provider';
 import Header from '@/ui/header/header';
 import store from '@/lib/redux/store';
 import './globals.css';
@@ -31,9 +31,11 @@ export default function RootLayout({
         }`}
       >
         <Provider store={store}>
-          <Header />
-          {children}
-          <ToastContainer position="top-right" theme="light" closeOnClick />
+          <AuthProvider>
+            <Header />
+            {children}
+            <ToastContainer position="top-right" theme="light" closeOnClick />
+          </AuthProvider>
         </Provider>
       </body>
     </html>
