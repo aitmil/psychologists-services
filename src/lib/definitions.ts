@@ -1,5 +1,11 @@
 export interface User {
-  user: { name: string; email: string } | null;
+  name: string;
+  email: string;
+  id: string;
+}
+
+export interface UserState {
+  user: User | null;
 }
 
 export interface Review {
@@ -24,10 +30,12 @@ export interface Psychologist {
 
 export interface PsychologistsState {
   data: Psychologist[];
+  psychologist: Psychologist | null;
   sortBy: string;
   lastKey: string | number | null;
   hasMore: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 export interface FavoritesState {
@@ -36,6 +44,12 @@ export interface FavoritesState {
   lastKey: string | number | null;
   hasMore: boolean;
   isLoading: boolean;
+}
+
+export interface FetchDataResponse {
+  data: Psychologist[];
+  lastValue: string | number | null;
+  hasMore: boolean;
 }
 
 export interface SortBy {
