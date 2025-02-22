@@ -1,12 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 import { toast } from 'react-toastify';
-
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import {
@@ -14,7 +11,8 @@ import {
   registerValidationSchema,
 } from '@/lib/validation';
 import { auth } from '@/lib/firebase/firebase';
-import { setUser } from '@/lib/redux/users/slice';
+import { useAppDispatch } from '@/lib/redux/hooks';
+import { setUser } from '@/lib/redux/auth/slice';
 import { RegisterFormValues } from '@/lib/definitions';
 
 interface RegisterFormProps {
@@ -22,8 +20,7 @@ interface RegisterFormProps {
 }
 
 export default function RegisterForm({ onSubmit }: RegisterFormProps) {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (
     values: typeof initialValuesRegister,
@@ -37,24 +34,24 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       );
 
       const user = userCredential.user;
-
       await updateProfile(user, { displayName: values.name });
 
       const db = getDatabase();
       await set(ref(db, `users/${user.uid}`), {
         displayName: values.name,
         email: values.email,
+        id: user.uid,
       });
 
       dispatch(
         setUser({
           name: values.name,
           email: values.email,
+          id: user.uid,
         })
       );
 
       resetForm();
-      router.back();
 
       if (onSubmit) {
         onSubmit(values);
