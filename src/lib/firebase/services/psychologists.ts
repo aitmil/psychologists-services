@@ -130,6 +130,25 @@ export const fetchData = async (
   }
 };
 
+export const fetchPsychologistById = async (
+  id: string
+): Promise<Psychologist | null> => {
+  try {
+    const psychologistRef = ref(db, `psychologists/${id}`);
+    const snapshot = await get(psychologistRef);
+
+    if (snapshot.exists()) {
+      const psychologist: Psychologist = snapshot.val();
+      return { ...psychologist };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching psychologist by id:', error);
+    throw error;
+  }
+};
+
 export const saveAppointmentToPsychologist = async (
   psychologistId: string,
   userId: string,

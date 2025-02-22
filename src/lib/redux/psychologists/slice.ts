@@ -1,13 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Psychologist, PsychologistsState } from '@/lib/definitions';
-import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
+import {
+  fetchPsychologist,
+  fetchPsychologists,
+} from '@/lib/redux/psychologists/operations';
 
 const initialState: PsychologistsState = {
   data: [],
+  psychologist: null,
   sortBy: 'Name (A to Z)',
   lastKey: null,
   hasMore: true,
   isLoading: false,
+  error: null,
 };
 
 const psychologistsSlice = createSlice({
@@ -27,6 +32,7 @@ const psychologistsSlice = createSlice({
     builder
       .addCase(fetchPsychologists.pending, state => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(
         fetchPsychologists.fulfilled,
@@ -54,8 +60,24 @@ const psychologistsSlice = createSlice({
           state.isLoading = false;
         }
       )
-      .addCase(fetchPsychologists.rejected, state => {
+      .addCase(fetchPsychologists.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message || 'Failed to fetch psychologists';
+      })
+      .addCase(fetchPsychologist.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchPsychologist.fulfilled,
+        (state, action: PayloadAction<Psychologist | null>) => {
+          state.psychologist = action.payload;
+          state.isLoading = false;
+        }
+      )
+      .addCase(fetchPsychologist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to fetch psychologist';
       });
   },
 });
