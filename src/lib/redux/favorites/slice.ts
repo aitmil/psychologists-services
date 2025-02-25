@@ -1,15 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAuth } from 'firebase/auth';
-import { updateUserFavorites } from '@/lib/firebase/services/user';
 import { FavoritesState, Psychologist } from '@/lib/definitions';
-import { fetchFavoritesData } from '@/lib/redux/favorites/operations';
+import {
+  fetchAllFavorites,
+  fetchFavoritesData,
+  toggleFavorite,
+} from '@/lib/redux/favorites/operations';
 
 const initialState: FavoritesState = {
   data: [],
+  favorites: [],
   sortBy: 'Name (A to Z)',
   lastKey: null,
   hasMore: true,
   isLoading: false,
+  error: null,
 };
 
 const favoritesSlice = createSlice({
@@ -19,16 +23,6 @@ const favoritesSlice = createSlice({
     setSortBy: (state, action: PayloadAction<string>) => {
       state.sortBy = action.payload;
     },
-    toggleFavorite: (state, action: PayloadAction<Psychologist>) => {
-      const user = getAuth().currentUser;
-      if (!user) return;
-      const psychologist = action.payload;
-      const isFavorite = state.data.some(fav => fav.id === psychologist.id);
-      state.data = isFavorite
-        ? state.data.filter(fav => fav.id !== psychologist.id)
-        : [...state.data, psychologist];
-      updateUserFavorites(user.uid, state.data);
-    },
     clearData: state => {
       state.data = [];
       state.lastKey = null;
@@ -37,8 +31,21 @@ const favoritesSlice = createSlice({
 
   extraReducers: builder => {
     builder
+      .addCase(fetchAllFavorites.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllFavorites.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.favorites = action.payload;
+      })
+      .addCase(fetchAllFavorites.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
       .addCase(fetchFavoritesData.pending, state => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(
         fetchFavoritesData.fulfilled,
@@ -66,11 +73,18 @@ const favoritesSlice = createSlice({
           state.isLoading = false;
         }
       )
-      .addCase(fetchFavoritesData.rejected, state => {
+      .addCase(fetchFavoritesData.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(toggleFavorite.fulfilled, (state, action) => {
+        const { psychologist, isFavorite } = action.payload;
+        state.data = isFavorite
+          ? state.data.filter(fav => fav.id !== psychologist.id)
+          : [...state.data, psychologist];
       });
   },
 });
 
-export const { setSortBy, toggleFavorite, clearData } = favoritesSlice.actions;
+export const { setSortBy, clearData } = favoritesSlice.actions;
 export default favoritesSlice.reducer;

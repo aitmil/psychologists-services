@@ -1,6 +1,24 @@
-import { set, ref, push } from 'firebase/database';
+import { set, ref, push, get } from 'firebase/database';
 import { db } from '@/lib/firebase/firebase';
 import { Psychologist } from '@/lib/definitions';
+
+export const fetchUserFavorites = async (
+  userId: string
+): Promise<Psychologist[]> => {
+  if (!userId) return [];
+
+  const favoritesRef = ref(db, `users/${userId}/favorites`);
+
+  try {
+    const snapshot = await get(favoritesRef);
+    const data = snapshot.val();
+
+    return data ? Object.values(data) : [];
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    throw error;
+  }
+};
 
 export const updateUserFavorites = async (
   userId: string,

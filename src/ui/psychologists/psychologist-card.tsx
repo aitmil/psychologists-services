@@ -1,7 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { getAuth } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import Avatar from '@/ui/psychologists/avatar';
@@ -12,9 +11,9 @@ import Button from '@/ui/button';
 import Icon from '../icon';
 import PsychologistInfo from './psychologist-info';
 import { Psychologist } from '@/lib/definitions';
-import { toggleFavorite } from '@/lib/redux/favorites/slice';
 import { selectFavorites } from '@/lib/redux/favorites/selectors';
-import { fetchFavoritesData } from '@/lib/redux/favorites/operations';
+import { toggleFavorite } from '@/lib/redux/favorites/operations';
+import { selectUser } from '@/lib/redux/auth/selectors';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -24,15 +23,13 @@ export default function PsychologistCard({
   psychologist,
 }: PsychologistCardProps) {
   const [showReviews, setShowReviews] = useState(false);
+
   const router = useRouter();
   const path = usePathname();
-  const dispatch = useAppDispatch();
-  const favoritesState = useAppSelector(selectFavorites);
-  const user = getAuth().currentUser;
 
-  useEffect(() => {
-    if (user) dispatch(fetchFavoritesData());
-  }, [user, dispatch]);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const { favorites } = useAppSelector(selectFavorites);
 
   const handleFavoriteToggle = () => {
     if (!user) {
@@ -40,7 +37,7 @@ export default function PsychologistCard({
       router.push('/login');
       return;
     }
-    dispatch(toggleFavorite(psychologist));
+    dispatch(toggleFavorite({ userId: user.id, psychologist }));
   };
 
   const handleAppointmentClick = () => {
@@ -74,9 +71,7 @@ export default function PsychologistCard({
           <div className="flex gap-[28px] items-center">
             <PsychologistDetails psychologist={psychologist} />
             <FavoriteButton
-              isFavorite={favoritesState.some(
-                fav => fav.id === psychologist.id
-              )}
+              isFavorite={favorites.some(fav => fav.id === psychologist.id)}
               onClick={handleFavoriteToggle}
             />
           </div>

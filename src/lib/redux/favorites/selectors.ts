@@ -9,6 +9,7 @@ export const selectFavorites = createSelector(
   [selectFavoritesState],
   (favoritesState: FavoritesState) => ({
     favorites: favoritesState.data,
+    allFavorites: favoritesState.favorites,
     loading: favoritesState.isLoading,
     hasMore: favoritesState.hasMore,
     lastKey: favoritesState.lastKey,
