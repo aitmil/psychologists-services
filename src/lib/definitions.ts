@@ -40,10 +40,12 @@ export interface PsychologistsState {
 
 export interface FavoritesState {
   data: Psychologist[];
+  favorites: Psychologist[];
   sortBy: string;
   lastKey: string | number | null;
   hasMore: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 export interface FetchDataResponse {

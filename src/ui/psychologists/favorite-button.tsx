@@ -14,6 +14,7 @@ export default function FavoriteButton({
     <button
       onClick={onClick}
       className="focus:outline-hidden bg-transparent border-none"
+      title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
     >
       <Icon
         name="icon-heart"

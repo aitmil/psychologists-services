@@ -61,9 +61,9 @@ export default function PsychologistsPage() {
           >
             {loading ? 'Loading...' : 'Load More'}
           </Button>
-        ) : favorites.length > 0 && !loading ? (
+        ) : favorites.length > 1 && !loading ? (
           <div className="mt-[64px] mx-auto block text-center">
-            <p>No more psychologists found</p>
+            <p>No more favorites found</p>
           </div>
         ) : null}
       </Container>
