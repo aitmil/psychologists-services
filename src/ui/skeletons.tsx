@@ -18,7 +18,7 @@ export function CardSkeleton() {
     <div
       className={`${shimmer} flex gap-6 rounded-3xl bg-[rgb(248,248,248)] p-6`}
     >
-      <div className="size-[120px] bg-[#f3f3f3] rounded-[30px]"></div>;
+      <div className="size-[120px] bg-[#f3f3f3] rounded-[30px]"></div>
       <div className="flex-1">
         <div className="flex justify-between mb-2">
           <div className="w-[98px] bg-[#f3f3f3] rounded-xl"></div>
@@ -45,11 +45,10 @@ export function CardSkeleton() {
 
 export function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-8">
-      <CardSkeleton />
-      <CardSkeleton />
-      <CardSkeleton />
-      <CardSkeleton />
+    <div className="flex flex-col gap-4">
+      {[...Array(3)].map((_, index) => (
+        <CardSkeleton key={index} />
+      ))}
     </div>
   );
 }
