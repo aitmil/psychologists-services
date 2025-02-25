@@ -30,17 +30,18 @@ interface AppointmentFormProps {
 }
 
 export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
+  const [busyTimes, setBusyTimes] = useState<string[]>([]);
+
+  const router = useRouter();
   const params = useParams();
   const { id } = params;
-  const [busyTimes, setBusyTimes] = useState<string[]>([]);
+
   const dispatch = useAppDispatch();
-  const router = useRouter();
+  const { psychologist, loading } = useAppSelector(selectPsychologist);
 
   useEffect(() => {
     dispatch(fetchPsychologist(id as string));
   }, [dispatch, id]);
-
-  const { psychologist, loading } = useAppSelector(selectPsychologist);
 
   useEffect(() => {
     const loadBusyTimes = async () => {
@@ -60,6 +61,12 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
     if (!currentUser) {
       throw new Error('User is not authenticated');
     }
+
+    if (!psychologist) {
+      toast.error('Please try again later. Psychologist is not found');
+      throw new Error('Psychologist is not found by id');
+    }
+
     const userId = currentUser.uid;
     const timeUTC = convertTimeToUTC(trimmedValues.time);
 

@@ -1,21 +1,7 @@
-'use client';
-
-import { notFound, useParams } from 'next/navigation';
-import { useAppSelector } from '@/lib/redux/hooks';
-import AppointmentForm from '@/ui/psychologists/appointment-form';
 import Container from '@/ui/container';
-import { selectFavorites } from '@/lib/redux/favorites/selectors';
+import AppointmentForm from '@/ui/psychologists/appointment-form';
 
 export default function Page() {
-  const params = useParams();
-  const { id } = params;
-  const psychologists = useAppSelector(selectFavorites);
-  const psychologist = psychologists.find(p => p.id === id);
-
-  if (!psychologist) {
-    return notFound();
-  }
-
   return (
     <Container>
       <div className="flex justify-center">
