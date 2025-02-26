@@ -9,7 +9,7 @@ export default function Title({ children, variant, popUp, name }: TitleProps) {
   switch (variant) {
     case 'h1':
       return (
-        <h1 className="font-semibold text-[80px] leading-[102%] tracking-[-0.02em] mb-[20px] max-w-[595px]">
+        <h1 className="font-semibold text-center lg:text-left text-5xl md:text-[60px] xl:text-[80px] leading-[102%] tracking-[-0.02em] mb-[20px] max-w-[595px]">
           {children}
         </h1>
       );

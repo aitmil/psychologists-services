@@ -16,7 +16,7 @@ export default function Text({ children, variant, className }: TextProps) {
       break;
     case 'homeText':
       variantClass =
-        'font-medium text-[18px] leading-[133%] mb-[40px] max-w-[510px]';
+        'font-medium text-center lg:text-left text-base xl:text-lg leading-[133%] mb-[24px] sm:mb-[32px] xl:mb-[40px] max-w-[510px]';
       break;
     default:
       break;

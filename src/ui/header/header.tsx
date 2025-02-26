@@ -1,17 +1,20 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { signOut } from 'firebase/auth';
 import { toast } from 'react-toastify';
-
+import { AnimatePresence } from 'framer-motion';
 import HeaderBtns from '@/ui/header/headerBtns';
 import Logo from '@/ui/header/logo';
 import Navigation from '@/ui/header/navigation';
 import Container from '@/ui/container';
-import { auth } from '@/lib/firebase/firebase';
-import Icon from '@/ui/icon';
+import IconButton from '@/ui/icon-button';
 import Button from '@/ui/button';
+import MobileMenu from '@/ui/header/mobile-menu';
+import UserProfile from '@/ui/header/user-profile';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase/firebase';
 import { clearUser } from '@/lib/redux/auth/slice';
 import { clearData } from '@/lib/redux/favorites/slice';
 import { selectUser } from '@/lib/redux/auth/selectors';
@@ -20,6 +23,7 @@ export default function Header() {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   const handleLogout = async () => {
     try {
@@ -34,36 +38,60 @@ export default function Header() {
     }
   };
 
+  const handleLogin = () => router.push('/login', { scroll: false });
+  const handleRegister = () => router.push('/register', { scroll: false });
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
   return (
-    <header className="py-8 border-b border-border-color">
+    <header className="py-4 md:py-6 xl:py-8 border-b border-border-color">
       <Container>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-[130px]">
-            <Logo />
-            <Navigation />
-          </div>
-          {user ? (
-            <div className="flex items-center gap-[28px]">
-              <div className="flex items-center gap-[14px]">
-                <div className="flex justify-center items-center size-10 rounded-xl bg-orange-light">
-                  <Icon name="icon-user" className="size-[24px]"></Icon>
-                </div>
-                <span className="font-medium">{user.name}</span>
-              </div>
+          <Logo />
 
+          <div className="hidden lg:flex">
+            <Navigation
+              isMobileMenuOpen={isMobileMenuOpen}
+              toggleMobileMenu={toggleMobileMenu}
+            />
+          </div>
+
+          {user ? (
+            <div className="hidden lg:flex items-center gap-[28px]">
+              <UserProfile name={user.name} />
               <Button type="submit" onClick={handleLogout} variant="outlined">
                 Logout
               </Button>
             </div>
           ) : (
-            <HeaderBtns
-              onClickLogin={() => router.push('/login', { scroll: false })}
-              onClickRegister={() =>
-                router.push('/register', { scroll: false })
-              }
+            <div className="hidden sm:flex">
+              <HeaderBtns
+                onClickLogin={handleLogin}
+                onClickRegister={handleRegister}
+              />
+            </div>
+          )}
+
+          <IconButton
+            icon="icon-IoReorderThreeOutline"
+            onClick={toggleMobileMenu}
+            title="Toggle Mobile Menu"
+            className="lg:hidden hover:fill-gray-600 active:fill-gray-600"
+            iconClassName="size-8"
+          />
+        </div>
+
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <MobileMenu
+              isOpen={isMobileMenuOpen}
+              toggleMenu={toggleMobileMenu}
+              user={user}
+              onLogout={handleLogout}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
             />
           )}
-        </div>
+        </AnimatePresence>
       </Container>
     </header>
   );

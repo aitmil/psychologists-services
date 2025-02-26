@@ -5,5 +5,9 @@ export interface ContainerProps {
 }
 
 export default function Container({ children }: ContainerProps) {
-  return <div className="max-w-[1440px] mx-auto px-32">{children}</div>;
+  return (
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32">
+      {children}
+    </div>
+  );
 }

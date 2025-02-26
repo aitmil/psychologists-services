@@ -26,12 +26,12 @@ export default function Button({
     <button
       type={type}
       className={clsx(
-        `${className} font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[30px] transition duration-200 px-[40px] py-[14px]`,
+        `${className} font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[30px] transition duration-200 px-[40px] py-[14px] active:scale-95 active:opacity-80`,
         {
           // Variant styles
-          'bg-orange-light text-white border-transparent hover:bg-orange-dark':
+          'bg-orange-light text-white border-transparent hover:bg-orange-dark active:bg-orange-dark':
             variant === 'filled',
-          'bg-transparent border border-border-color text-foreground hover:border-orange-dark':
+          'bg-transparent border border-border-color text-foreground hover:border-orange-dark active:border-orange-dark':
             variant === 'outlined',
 
           // Conditional styles
