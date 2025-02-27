@@ -1,10 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: {
-    template: '%s | Psychologists Services',
-    default: 'Acme Dashboard',
+  title: 'Psychologists Services',
+  description:
+    'Service for searching and booking appointments with psychologists',
+  metadataBase: new URL('https://psychologists-services-xi.vercel.app/'),
+  keywords:
+    'psychologists, mental health, therapy, counseling, booking, appointments, GoIT projects, frontend projects',
+  icons: {
+    icon: '/favicon.svg',
   },
-  description: 'Service for searching psychologist',
-  metadataBase: new URL(''),
+  authors: [{ name: 'Anna Taranchuk' }],
 };
