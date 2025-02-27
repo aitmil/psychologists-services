@@ -4,6 +4,7 @@ import UserProfile from '@/ui/header/user-profile';
 import IconButton from '@/ui/icon-button';
 import Button from '@/ui/button';
 import HeaderBtns from './headerBtns';
+import { useEffect } from 'react';
 
 interface MobileMenuProps {
   user: { name: string } | null;
@@ -22,6 +23,18 @@ export default function MobileMenu({
   onLogin,
   onRegister,
 }: MobileMenuProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const handleLogout = () => {
     onLogout();
     toggleMenu();
@@ -41,7 +54,7 @@ export default function MobileMenu({
       animate={{ x: isOpen ? 0 : '100%' }}
       exit={{ x: '100%' }}
       transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-      className="fixed top-0 right-0 h-full bg-[#f3f3f3] z-50 flex flex-col items-center gap-10 shadow-lg 
+      className="fixed top-0 right-0 h-full overflow-y-auto bg-[#f3f3f3] z-50 flex flex-col items-center gap-10 shadow-lg 
                  w-full sm:w-[375px] px-6 py-20 sm:rounded-l-2xl"
     >
       <IconButton
