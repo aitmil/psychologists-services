@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchPsychologists } from '@/lib/redux/psychologists/operations';
 import { clearData, setSortBy } from '@/lib/redux/psychologists/slice';
 import { selectPsychologists } from '@/lib/redux/psychologists/selectors';
+import { fetchAllFavorites } from '@/lib/redux/favorites/operations';
+import { selectUser } from '@/lib/redux/auth/selectors';
 import { SortBy } from '@/lib/definitions';
 import Container from '@/ui/container';
 import SortMenu from '@/ui/psychologists/sort-menu';
@@ -18,12 +20,14 @@ export default function PsychologistsPage() {
     useState<string>('Name (A to Z)');
 
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const { psychologists, loading, hasMore } =
     useAppSelector(selectPsychologists);
 
   useEffect(() => {
     dispatch(fetchPsychologists());
-  }, [dispatch]);
+    if (user) dispatch(fetchAllFavorites(user.id));
+  }, [dispatch, user]);
 
   const handleSortByChange = (sortBy: SortBy) => {
     if (currentSortBy !== sortBy.name) {

@@ -30,9 +30,9 @@ export default function PsychologistCard({
 
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const { favorites } = useAppSelector(selectFavorites);
+  const { allFavorites } = useAppSelector(selectFavorites);
 
-  const isFavorite = favorites.some(fav => fav.id === psychologist.id);
+  const isFavorite = allFavorites.some(fav => fav.id === psychologist.id);
 
   const handleFavoriteToggle = () => {
     if (!user) {
