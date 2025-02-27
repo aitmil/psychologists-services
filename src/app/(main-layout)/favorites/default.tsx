@@ -57,12 +57,12 @@ export default function PsychologistsPage() {
               dispatch(fetchFavoritesData());
             }}
             variant="filled"
-            className="mt-[64px] mx-auto block"
+            className="px-[32px] sm:px-[36px] lg:px-[40px] py-[10px] sm:py-[12px] lg:py-[14px] mt-[44px] sm:mt-[54x] lg:mt-[64px] mx-auto block"
           >
             {loading ? 'Loading...' : 'Load More'}
           </Button>
         ) : favorites.length > 1 && !loading ? (
-          <div className="mt-[64px] mx-auto block text-center">
+          <div className="mt-[44px] sm:mt-[54x] lg:mt-[64px] mx-auto block text-center">
             <p>No more favorites found</p>
           </div>
         ) : null}

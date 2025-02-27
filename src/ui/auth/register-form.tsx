@@ -72,11 +72,11 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
   };
 
   return (
-    <div className="w-full max-w-[438px]">
-      <h2 className="mb-5 font-medium text-[40px] leading-[120%] tracking-[-0.02em] text-black">
+    <>
+      <h2 className="mb-4 md:mb-5 font-medium text-[30px] md:text-[35px] lg:text-[40px]  leading-[120%] tracking-[-0.02em] text-black">
         Registration
       </h2>
-      <p className="mb-10 text-[16px] leading-[125%] text-semi-text">
+      <p className="mb-5 md:mb-8 lg:mb-10 text-[14px] md:text-[15px] lg:text-[16px]  leading-[125%] text-semi-text">
         Thank you for your interest in our platform! In order to register, we
         need some information. Please provide us with the following information.
       </p>
@@ -94,13 +94,13 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
               type="submit"
               form
               variant="filled"
-              className="w-full mt-[22px]"
+              className="w-full mt-[18px] md:mt-[20px] lg:mt-[22px]"
             >
               Sign Up
             </Button>
           </Form>
         )}
       </Formik>
-    </div>
+    </>
   );
 }

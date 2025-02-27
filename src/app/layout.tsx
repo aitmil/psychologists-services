@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased min-h-screen ${
+        className={`${inter.className} antialiased min-h-screen flex flex-col ${
           isHomePage
             ? 'bg-gradient-to-br from-main-background to-orange-transparent'
             : ''
@@ -34,7 +34,13 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             {children}
-            <ToastContainer position="top-right" theme="light" closeOnClick />
+            <ToastContainer
+              position="top-right"
+              theme="light"
+              closeOnClick
+              newestOnTop
+              autoClose={2000}
+            />
           </AuthProvider>
         </Provider>
       </body>

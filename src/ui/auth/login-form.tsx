@@ -45,11 +45,11 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
   };
 
   return (
-    <div className="w-full max-w-[438px]">
-      <h2 className="mb-5 font-medium text-[40px] leading-[120%] tracking-[-0.02em] text-black">
+    <>
+      <h2 className="mb-4 md:mb-5 font-medium text-[30px] md:text-[35px] lg:text-[40px] leading-[120%] tracking-[-0.02em] text-black">
         Log In
       </h2>
-      <p className="mb-10 text-[16px] leading-[125%] text-semi-text">
+      <p className="mb-5 md:mb-8 lg:mb-10 text-[14px] md:text-[15px] lg:text-[16px] leading-[125%] text-semi-text">
         Welcome back! Please enter your credentials to access your account.
       </p>
       <Formik
@@ -64,12 +64,12 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
             type="submit"
             form
             variant="filled"
-            className="w-full mt-[22px]"
+            className="w-full mt-[18px] md:mt-[20px] lg:mt-[22px]"
           >
             Log In
           </Button>
         </Form>
       </Formik>
-    </div>
+    </>
   );
 }

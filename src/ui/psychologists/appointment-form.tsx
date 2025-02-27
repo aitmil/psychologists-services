@@ -90,11 +90,11 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
   };
 
   return (
-    <div className="w-full max-w-[438px]">
-      <h2 className="mb-5 font-medium text-[40px] leading-[120%] tracking-[-0.02em] text-black">
+    <>
+      <h2 className="mb-4 md:mb-5 font-medium text-[30px] md:text-[35px] lg:text-[40px] leading-[120%] tracking-[-0.02em] text-black">
         Make an appointment with a psychologists
       </h2>
-      <p className="mb-10 text-[16px] leading-[125%] text-semi-text">
+      <p className="mb-5 md:mb-8 lg:mb-10 text-[14px] md:text-[15px] lg:text-[16px] leading-[125%] text-semi-text">
         You are on the verge of changing your life for the better. Fill out the
         short form below to book your personal appointment with a professional
         psychologist. We guarantee confidentiality and respect for your privacy.
@@ -102,7 +102,7 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
 
       {loading && !psychologist && <SmallCardSkeleton />}
       {!loading && psychologist && (
-        <div className="flex gap-[14px] mb-10">
+        <div className="flex gap-[14px] mb-5 md:mb-8 lg:mb-10">
           <Avatar imageUrl={psychologist.avatar_url} size={44} />
           <div>
             <h3 className="mb-1 text-[12px] font-medium leading-[133%] text-light-color">
@@ -138,12 +138,12 @@ export default function AppointmentForm({ onSubmit }: AppointmentFormProps) {
             type="submit"
             form
             variant="filled"
-            className="w-full mt-[22px]"
+            className="w-full mt-[18px] md:mt-[20px] lg:mt-[22px]"
           >
             Send
           </Button>
         </Form>
       </Formik>
-    </div>
+    </>
   );
 }

@@ -42,19 +42,25 @@ export default function MobileMenu({
       exit={{ x: '100%' }}
       transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
       className="fixed top-0 right-0 h-full bg-[#f3f3f3] z-50 flex flex-col items-center gap-10 shadow-lg 
-                 w-full sm:w-[375px] px-6 py-8 sm:rounded-l-2xl"
+                 w-full sm:w-[375px] px-6 py-20 sm:rounded-l-2xl"
     >
       <IconButton
         icon="icon-cross"
         onClick={toggleMenu}
         title="Close Mobile Menu"
-        className="absolute top-4 right-4 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
+        className="absolute top-5 right-5 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
         iconClassName="size-8"
       />
 
-      {user && <UserProfile name={user.name} />}
+      {user && (
+        <div className="border-b border-border-color w-full pb-10">
+          <UserProfile name={user.name} />
+        </div>
+      )}
 
-      <Navigation isMobileMenuOpen={isOpen} toggleMobileMenu={toggleMenu} />
+      <div className="border-b border-border-color w-full pb-10">
+        <Navigation isMobileMenuOpen={isOpen} toggleMobileMenu={toggleMenu} />
+      </div>
 
       {user ? (
         <Button type="submit" onClick={handleLogout} variant="outlined">

@@ -125,6 +125,7 @@ export default function PsychologistCard({
               type="button"
               variant="filled"
               onClick={handleAppointmentClick}
+              className="px-[32px] sm:px-[36px] lg:px-[40px] py-[10px] sm:py-[12px] lg:py-[14px] "
             >
               Make an appointment
             </Button>

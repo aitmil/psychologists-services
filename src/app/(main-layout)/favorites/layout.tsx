@@ -7,7 +7,7 @@ export default function Layout({ children, modal }: LayoutProps) {
   return (
     <>
       {modal}
-      <main>{children}</main>
+      <main className="flex flex-col flex-grow">{children}</main>
     </>
   );
 }

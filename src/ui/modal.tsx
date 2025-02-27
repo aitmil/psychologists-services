@@ -12,9 +12,15 @@ export interface ModalProps {
   children?: React.ReactNode;
   show: boolean;
   onClose: () => void;
+  className?: string;
 }
 
-export default function Modal({ show, children, onClose }: ModalProps) {
+export default function Modal({
+  show,
+  children,
+  onClose,
+  className,
+}: ModalProps) {
   return (
     <Transition as={Fragment} show={show}>
       <Dialog
@@ -33,7 +39,9 @@ export default function Modal({ show, children, onClose }: ModalProps) {
         >
           <div className="fixed inset-0 bg-overlay bg-opacity-75 transition-opacity" />
         </TransitionChild>
-        <DialogPanel className="relative transform overflow-hidden rounded-[30px] bg-main-background shadow-xl transition-all p-[64px] mx-auto max-w-[600px]">
+        <DialogPanel
+          className={`w-full max-w-auto h-full md:h-auto flex flex-col justify-center relative transform overflow-hidden p-[22px] sm:p-[44px] lg:p-[64px] mx-auto md:rounded-[20px] lg:rounded-[30px] bg-main-background shadow-xl transition-all ${className}`}
+        >
           {children}
         </DialogPanel>
       </Dialog>

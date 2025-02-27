@@ -38,7 +38,7 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div className="w-full mb-[18px]">
+    <div className="w-full mb-[14px] md:mb-[16px] lg:mb-[18px]">
       <div className="relative w-full">
         {as === 'textarea' ? (
           <textarea

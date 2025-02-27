@@ -16,7 +16,12 @@ export default function HeaderBtns({
       <Button type="button" variant="outlined" onClick={onClickLogin}>
         Log In
       </Button>
-      <Button type="button" variant="filled" onClick={onClickRegister}>
+      <Button
+        type="button"
+        variant="filled"
+        onClick={onClickRegister}
+        className="px-[32px] sm:px-[36px] lg:px-[40px] py-[10px] sm:py-[12px] lg:py-[14px]"
+      >
         Registration
       </Button>
     </div>

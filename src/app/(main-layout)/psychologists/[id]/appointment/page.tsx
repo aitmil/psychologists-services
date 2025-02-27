@@ -1,16 +1,13 @@
 'use client';
 
-import Container from '@/ui/container';
 import AppointmentForm from '@/ui/psychologists/appointment-form';
 
 export default function Page() {
   return (
-    <Container>
-      <div className="flex justify-center">
-        <div className="bg-white max-w-[566px] p-[64px] mt-9 rounded-[30px]">
-          <AppointmentForm />
-        </div>
+    <div className="flex justify-center flex-grow">
+      <div className="bg-white w-full max-w-[640px] md:max-w-[566px] p-[22px] sm:p-[44px] lg:p-[64px] md:rounded-[20px] lg:rounded-[30px] md:mt-9">
+        <AppointmentForm />
       </div>
-    </Container>
+    </div>
   );
 }
