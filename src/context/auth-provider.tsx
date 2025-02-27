@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { PuffLoader } from 'react-spinners';
 import { useAppDispatch } from '@/lib/redux/hooks';
 import { setUser, clearUser } from '@/lib/redux/auth/slice';
+import { fetchAllFavorites } from '@/lib/redux/favorites/operations';
 
 interface AuthContextType {
   loading: boolean;
@@ -22,11 +23,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         dispatch(
           setUser({
-            name: user.displayName || 'Anonymous',
+            name: user.displayName || 'User',
             email: user.email || '',
             id: user.uid,
           })
         );
+        dispatch(fetchAllFavorites(user.uid));
       } else {
         dispatch(clearUser());
       }

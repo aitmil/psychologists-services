@@ -79,9 +79,16 @@ const favoritesSlice = createSlice({
       })
       .addCase(toggleFavorite.fulfilled, (state, action) => {
         const { psychologist, isFavorite } = action.payload;
-        state.data = isFavorite
-          ? state.data.filter(fav => fav.id !== psychologist.id)
-          : [...state.data, psychologist];
+
+        if (isFavorite) {
+          state.favorites = state.favorites.filter(
+            fav => fav.id !== psychologist.id
+          );
+          state.data = state.data.filter(fav => fav.id !== psychologist.id);
+        } else {
+          state.favorites = [...state.favorites, psychologist];
+          state.data = [...state.data, psychologist];
+        }
       });
   },
 });

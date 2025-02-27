@@ -2,19 +2,19 @@
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import Avatar from '@/ui/psychologists/avatar';
 import PsychologistDetails from '@/ui/psychologists/psychologist-details';
 import ReviewsSection from '@/ui/psychologists/reviews-section';
+import IconButton from '@/ui/icon-button';
 import Button from '@/ui/button';
-import Icon from '../icon';
+import Icon from '@/ui/icon';
 import PsychologistInfo from './psychologist-info';
 import { Psychologist } from '@/lib/definitions';
 import { selectFavorites } from '@/lib/redux/favorites/selectors';
 import { toggleFavorite } from '@/lib/redux/favorites/operations';
 import { selectUser } from '@/lib/redux/auth/selectors';
-import IconButton from '../icon-button';
-import clsx from 'clsx';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
