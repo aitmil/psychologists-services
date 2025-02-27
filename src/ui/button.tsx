@@ -26,17 +26,15 @@ export default function Button({
     <button
       type={type}
       className={clsx(
-        `${className} font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[30px] transition duration-200 px-[40px] py-[14px] active:scale-95 active:opacity-80`,
+        `${className} font-medium text-[16px] leading-[125%] tracking-[-0.01em] rounded-[22px] sm:rounded-[26px] lg:rounded-[30px] transition duration-200 px-[32px] sm:px-[36px] lg:px-[40px] py-[10px] sm:py-[12px] lg:py-[14px] active:scale-95 active:opacity-80`,
         {
-          // Variant styles
           'bg-orange-light text-white border-transparent hover:bg-orange-dark active:bg-orange-dark':
             variant === 'filled',
           'bg-transparent border border-border-color text-foreground hover:border-orange-dark active:border-orange-dark':
             variant === 'outlined',
-
-          // Conditional styles
-          'text-[20px] leading-[120%] px-[50px] py-[18px]': start,
-          'px-[16px] py-[16px]': form,
+          'text-[20px] leading-[120%] px-[42px] sm:px-[46px] lg:px-[50px] py-[14px] sm:py-[16px] lg:py-[18px]':
+            start,
+          'p-[12px] sm:p-[14px] lg:p-[16px]': form,
         }
       )}
       onClick={onClick}

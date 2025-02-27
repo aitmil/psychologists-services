@@ -4,7 +4,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import Avatar from '@/ui/psychologists/avatar';
-import FavoriteButton from '@/ui/psychologists/favorite-button';
 import PsychologistDetails from '@/ui/psychologists/psychologist-details';
 import ReviewsSection from '@/ui/psychologists/reviews-section';
 import Button from '@/ui/button';
@@ -14,6 +13,8 @@ import { Psychologist } from '@/lib/definitions';
 import { selectFavorites } from '@/lib/redux/favorites/selectors';
 import { toggleFavorite } from '@/lib/redux/favorites/operations';
 import { selectUser } from '@/lib/redux/auth/selectors';
+import IconButton from '../icon-button';
+import clsx from 'clsx';
 
 interface PsychologistCardProps {
   psychologist: Psychologist;
@@ -30,6 +31,8 @@ export default function PsychologistCard({
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const { favorites } = useAppSelector(selectFavorites);
+
+  const isFavorite = favorites.some(fav => fav.id === psychologist.id);
 
   const handleFavoriteToggle = () => {
     if (!user) {
@@ -56,36 +59,67 @@ export default function PsychologistCard({
 
   return (
     <>
-      <div className="size-[120px] p-3 border-2 border-orange-transparent rounded-[30px]">
-        <div className="relative">
-          <Avatar imageUrl={psychologist.avatar_url} size={96} />
-          <Icon
-            name="icon-point"
-            className="absolute top-0 right-0 w-[14px] h-[14px]"
+      <div className="flex justify-between items-start sm:block">
+        <div className="flex sm:block gap-3">
+          <div className="size-[100px] sm:size-[120px] p-2 sm:p-3 mb-3 sm:mb-0 flex justify-center items-center border-2 border-orange-transparent rounded-[22px] sm:rounded-[26px] lg:rounded-[30px]">
+            <div className="relative">
+              <Avatar imageUrl={psychologist.avatar_url} size={96} />
+              <Icon
+                name="icon-point"
+                className="absolute top-0 right-0 w-[14px] h-[14px]"
+              />
+            </div>
+          </div>
+          <div className="flex sm:hidden gap-[28px] items-center justify-between sm:justify-start ">
+            <PsychologistDetails psychologist={psychologist} />
+          </div>
+        </div>
+        <div className="sm:hidden">
+          <IconButton
+            icon="icon-heart"
+            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            onClick={handleFavoriteToggle}
+            iconClassName={clsx('size-[26px]', {
+              'stroke-black fill-transparent hover:stroke-gray-600 active:stroke-gray-600':
+                !isFavorite,
+              'stroke-transparent fill-orange-light hover:fill-orange-dark active:fill-orange-dark':
+                isFavorite,
+            })}
           />
         </div>
       </div>
       <div className="flex-1">
-        <div className="flex justify-between mb-2">
-          <h2>Psychologist</h2>
-          <div className="flex gap-[28px] items-center">
+        <div className="sm:flex justify-between mb-2">
+          <h2 className="mb-1 sm:mb-0">Psychologist</h2>
+          <h3 className="sm:hidden mb-4 text-2xl leading-[100%] text-black">
+            {psychologist.name}
+          </h3>
+          <div className="hidden sm:flex gap-[28px] items-center justify-between sm:justify-start ">
             <PsychologistDetails psychologist={psychologist} />
-            <FavoriteButton
-              isFavorite={favorites.some(fav => fav.id === psychologist.id)}
+            <IconButton
+              icon="icon-heart"
+              title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
               onClick={handleFavoriteToggle}
+              iconClassName={clsx('size-[26px]', {
+                'stroke-black fill-transparent': !isFavorite,
+                'stroke-transparent fill-orange-light': isFavorite,
+              })}
             />
           </div>
         </div>
+        <h3 className="hidden sm:inline-block sm:mb-5 lg:mb-6 text-2xl leading-[100%] text-black">
+          {psychologist.name}
+        </h3>
         <PsychologistInfo psychologist={psychologist} />
         {!showReviews ? (
           <button
             onClick={() => setShowReviews(true)}
-            className="text-black underline"
+            className="text-black underline  transition-colors duration-200  hover:text-orange-dark active:text-orange-dark active:opacity-70"
           >
             Read more
           </button>
         ) : (
-          <div className="mt-[34px] max-w-[758px]">
+          <div className="mt-[26px] sm:mt-[30px] lg:mt-[34px] max-w-[758px]">
             <ReviewsSection reviews={psychologist.reviews} />
             <Button
               type="button"

@@ -9,10 +9,7 @@ export default function PsychologistInfo({
 }: PsychologistInfoProps) {
   return (
     <>
-      <h3 className="mb-6 text-2xl leading-[100%] text-black">
-        {psychologist.name}
-      </h3>
-      <ul className="flex flex-wrap gap-x-1 gap-y-2 max-w-[850px] mb-6">
+      <ul className="flex flex-wrap gap-x-1 gap-y-2 max-w-[850px] mb-4 sm:mb-5 lg:mb-6">
         <li className="inline-flex items-center gap-1 rounded-3xl py-2 px-4 bg-[#f3f3f3] max-w-max">
           <h4>Experience:</h4>
           <p className="text-black">{psychologist.experience}</p>
@@ -30,7 +27,7 @@ export default function PsychologistInfo({
           <p className="text-black">{psychologist.initial_consultation}</p>
         </li>
       </ul>
-      <p className="mb-[14px] font-normal leading-[125%] text-primary-base/50">
+      <p className="mb-[10px] sm:mb-[12px] lg:mb-[14px] font-normal leading-[125%] text-primary-base/50">
         {psychologist.about}
       </p>
     </>

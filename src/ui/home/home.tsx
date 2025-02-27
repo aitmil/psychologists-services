@@ -1,9 +1,8 @@
 import Link from 'next/link';
-
+import ImageContent from '@/ui/home/image';
 import Container from '@/ui/container';
 import Text from '@/ui/text';
 import Title from '@/ui/title';
-import ImageContent from '@/ui/home/image';
 import Icon from '@/ui/icon';
 
 export default function HomeContent() {

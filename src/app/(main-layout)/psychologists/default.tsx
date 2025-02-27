@@ -52,7 +52,7 @@ export default function PsychologistsPage() {
               dispatch(fetchPsychologists());
             }}
             variant="filled"
-            className="mt-[64px] mx-auto block"
+            className="mt-[44px] sm:mt-[54x] lg:mt-[64px] mx-auto block"
           >
             {loading ? 'Loading...' : 'Load More'}
           </Button>
