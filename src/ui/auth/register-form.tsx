@@ -1,7 +1,11 @@
-'use client';
-
+import { useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 import { toast } from 'react-toastify';
 import InputField from '@/ui/input-field';
@@ -14,12 +18,14 @@ import { auth } from '@/lib/firebase/firebase';
 import { useAppDispatch } from '@/lib/redux/hooks';
 import { setUser } from '@/lib/redux/auth/slice';
 import { RegisterFormValues } from '@/lib/definitions';
+import Image from 'next/image';
 
 interface RegisterFormProps {
   onSubmit?: (values: RegisterFormValues) => void | Promise<void>;
 }
 
 export default function RegisterForm({ onSubmit }: RegisterFormProps) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (
@@ -57,13 +63,54 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
         onSubmit(values);
       }
 
+      router.replace('/');
+
       toast.success(
-        `Welcome, ${user.displayName}! You are now registered and logged in as a user!`
+        `Welcome, ${
+          user.displayName || 'User'
+        }! You are now registered and logged in!`
       );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error creating user:', error.message);
         toast.error(`Registration failed: ${error.message}`);
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred.');
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      dispatch(
+        setUser({
+          name: user.displayName || 'User',
+          email: user.email || '',
+          id: user.uid,
+        })
+      );
+
+      if (onSubmit) {
+        onSubmit({
+          name: user.displayName || 'User',
+          email: user.email || '',
+          password: '',
+        });
+      }
+
+      router.replace('/');
+
+      toast.success(`Welcome back, ${user.displayName || 'User'}!`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error signing in with Google:', error.message);
+        toast.error(`Google Sign-In failed. Try to reload this page.`);
       } else {
         console.error('An unknown error occurred:', error);
         toast.error('An unknown error occurred.');
@@ -101,6 +148,23 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
           </Form>
         )}
       </Formik>
+
+      <div className="mt-4 text-center">or</div>
+
+      <Button
+        type="button"
+        variant="outlined"
+        className="w-full mt-4 flex items-center justify-center"
+        onClick={handleGoogleSignIn}
+      >
+        <Image
+          src="/google-icon.svg"
+          alt="Google icon"
+          width={24}
+          height={24}
+        />
+        <span className="ml-2">Sign in with Google</span>
+      </Button>
     </>
   );
 }

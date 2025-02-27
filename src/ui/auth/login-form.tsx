@@ -1,4 +1,10 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import Image from 'next/image';
 import { Formik, Form } from 'formik';
 import { toast } from 'react-toastify';
 import InputField from '@/ui/input-field';
@@ -6,12 +12,16 @@ import Button from '@/ui/button';
 import { initialValuesLogin, loginValidationSchema } from '@/lib/validation';
 import { auth } from '@/lib/firebase/firebase';
 import { LoginFormValues } from '@/lib/definitions';
+import { useAppDispatch } from '@/lib/redux/hooks';
+import { setUser } from '@/lib/redux/auth/slice';
 
 interface LoginFormProps {
   onSubmit?: (values: LoginFormValues) => void | Promise<void>;
 }
 
 export default function LoginForm({ onSubmit }: LoginFormProps) {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const handleSubmit = async (
     values: typeof initialValuesLogin,
     { resetForm }: { resetForm: () => void }
@@ -30,13 +40,46 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
         onSubmit(values);
       }
 
-      toast.success(
-        `Welcome back, ${user.displayName}! You are now logged in as a user!`
-      );
+      router.replace('/');
+
+      toast.success(`Welcome back, ${user.displayName || 'User'}!`);
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error login user:', error.message);
         toast.error(`Login failed: ${error.message}`);
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred.');
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      dispatch(
+        setUser({
+          name: user.displayName || 'User',
+          email: user.email || '',
+          id: user.uid,
+        })
+      );
+
+      if (onSubmit) {
+        onSubmit({ email: user.email || '', password: '' });
+      }
+
+      router.replace('/');
+
+      toast.success(`Welcome back, ${user.displayName || 'User'}!`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error signing in with Google:', error.message);
+        toast.error(`Google Sign-In failed. Try to reload this page.`);
       } else {
         console.error('An unknown error occurred:', error);
         toast.error('An unknown error occurred.');
@@ -70,6 +113,23 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
           </Button>
         </Form>
       </Formik>
+
+      <div className="mt-4 text-center">or</div>
+
+      <Button
+        type="button"
+        variant="outlined"
+        className="w-full mt-4 flex items-center justify-center"
+        onClick={handleGoogleSignIn}
+      >
+        <Image
+          src="/google-icon.svg"
+          alt="Google icon"
+          width={24}
+          height={24}
+        />
+        <span className="ml-2">Sign in with Google</span>
+      </Button>
     </>
   );
 }
