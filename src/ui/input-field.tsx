@@ -46,7 +46,7 @@ const InputField: React.FC<InputFieldProps> = ({
             id={name}
             rows={rows}
             placeholder=" "
-            className={`${className} peer w-full px-[18px] py-4 border rounded-xl text-black placeholder-transparent resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+            className={`${className} peer w-full px-[18px] py-4 border rounded-xl bg-transparent text-black placeholder-transparent resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
               meta.touched && meta.error
                 ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                 : 'border-border-color'
@@ -64,7 +64,7 @@ const InputField: React.FC<InputFieldProps> = ({
                 : field.value
             }
             onChange={isPhoneInput ? handlePhoneChange : field.onChange}
-            className={`${className} peer w-full px-[18px] py-4 border rounded-xl text-black placeholder-transparent focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+            className={`${className} peer w-full px-[18px] py-4 border rounded-xl text-black bg-transparent placeholder-transparent focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
               meta.touched && meta.error
                 ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                 : 'border-border-color'
@@ -75,7 +75,7 @@ const InputField: React.FC<InputFieldProps> = ({
         {!isPhoneInput && (
           <label
             htmlFor={name}
-            className="absolute left-4 top-[-10px] text-black text-[16px] leading-[125%] bg-white px-1 transition-all transform peer-placeholder-shown:top-[18px] peer-placeholder-shown:left-4 peer-placeholder-shown:text-[16px] peer-placeholder-shown:translate-y-0 peer-focus:top-[-10px] peer-focus:translate-y-0 peer-focus:bg-white peer-focus:px-1"
+            className="absolute left-4 top-[-10px] bg-transparent text-black text-[16px] leading-[125%]  px-1 transition-all transform peer-placeholder-shown:top-[18px] peer-placeholder-shown:left-4 peer-placeholder-shown:text-[16px] peer-placeholder-shown:translate-y-0 peer-focus:top-[-10px] peer-focus:translate-y-0 peer-focus:bg-white peer-focus:px-1"
           >
             {label}
           </label>

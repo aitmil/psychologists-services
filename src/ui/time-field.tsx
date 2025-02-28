@@ -49,7 +49,7 @@ const TimeField: React.FC<TimeFieldProps> = ({ name, busyTimes }) => {
         <Listbox value={selectedTime} onChange={handleTimeChange}>
           <ListboxButton
             className={clsx(
-              'relative block w-full border rounded-xl bg-white py-4 pr-[18px] pl-[18px] text-left text-base text-black transition duration-100',
+              'relative block w-full border rounded-xl bg-transparent py-4 pr-[18px] pl-[18px] text-left text-base text-black transition duration-100',
               'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500',
               meta.touched && meta.error
                 ? 'border-red-500 focus:ring-red-500 focus:border-red-500'

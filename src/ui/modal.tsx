@@ -40,7 +40,7 @@ export default function Modal({
           <div className="fixed inset-0 bg-overlay bg-opacity-75 transition-opacity" />
         </TransitionChild>
         <DialogPanel
-          className={`w-full max-w-auto h-full md:h-auto flex flex-col justify-center relative transform overflow-hidden p-[22px] sm:p-[44px] lg:p-[64px] mx-auto md:rounded-[20px] lg:rounded-[30px] bg-main-background shadow-xl transition-all ${className}`}
+          className={`w-full max-w-auto h-full md:h-auto flex flex-col md:justify-center relative transform overflow-hidden pt-20 sm:pt-20 p-[22px] sm:p-[44px] lg:p-[64px] mx-auto md:rounded-[20px] lg:rounded-[30px] bg-main-background shadow-xl transition-all ${className}`}
         >
           {children}
         </DialogPanel>
