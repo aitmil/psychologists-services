@@ -61,7 +61,7 @@ export default function MobileMenu({
         icon="icon-cross"
         onClick={toggleMenu}
         title="Close Mobile Menu"
-        className="absolute top-5 right-5 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
+        className="absolute top-5 right-5 bg-transparent stroke-black hover:stroke-gray-600 active:stroke-gray-600"
         iconClassName="size-8"
       />
 

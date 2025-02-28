@@ -93,6 +93,7 @@ export default function PsychologistCard({
               'stroke-[#000] fill-transparent hover:stroke-gray-600 active:stroke-gray-600 hover:fill-transparent active:fill-transparent':
                 !user,
             })}
+            className="bg-transparent"
           />
         </div>
       </div>
@@ -114,6 +115,7 @@ export default function PsychologistCard({
                 'stroke-transparent fill-orange-light  hover:fill-orange-dark active:fill-orange-dark':
                   isFavorite,
               })}
+              className="bg-transparent"
             />
           </div>
         </div>

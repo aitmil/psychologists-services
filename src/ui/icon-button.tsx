@@ -20,7 +20,7 @@ export default function IconButton({
     <button
       type="button"
       onClick={onClick}
-      className={`focus:outline-hidden bg-transparent transition-all duration-200 ease-in-out 
+      className={`focus:outline-hidden transition-all duration-200 ease-in-out 
 			active:scale-90 ${className}`}
       title={title}
       aria-label={title}

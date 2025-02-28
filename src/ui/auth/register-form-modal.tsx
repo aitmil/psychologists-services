@@ -19,7 +19,7 @@ export default function RegisterFormModal({ onClose, ...rest }: ModalProps) {
         icon="icon-cross"
         onClick={onClose}
         title="Close Register Form Modal"
-        className="absolute top-5 right-5 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
+        className="absolute top-5 right-5 bg-transparent stroke-black hover:stroke-gray-600 active:stroke-gray-600"
         iconClassName="size-8"
       />
       <RegisterForm

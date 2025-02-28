@@ -75,7 +75,7 @@ export default function Header() {
             icon="icon-IoReorderThreeOutline"
             onClick={toggleMobileMenu}
             title="Toggle Mobile Menu"
-            className="lg:hidden hover:fill-gray-600 active:fill-gray-600"
+            className="lg:hidden bg-transparent hover:fill-gray-600 active:fill-gray-600"
             iconClassName="size-8"
           />
         </div>
