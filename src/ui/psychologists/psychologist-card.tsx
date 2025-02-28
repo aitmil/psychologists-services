@@ -77,13 +77,21 @@ export default function PsychologistCard({
         <div className="sm:hidden">
           <IconButton
             icon="icon-heart"
-            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            title={
+              user
+                ? isFavorite
+                  ? 'Remove from favorites'
+                  : 'Add to favorites'
+                : 'Log in to add to favorites'
+            }
             onClick={handleFavoriteToggle}
             iconClassName={clsx('size-[26px]', {
               'stroke-black fill-transparent hover:stroke-gray-600 active:stroke-gray-600':
                 !isFavorite,
               'stroke-transparent fill-orange-light hover:fill-orange-dark active:fill-orange-dark':
                 isFavorite,
+              'stroke-[#000] fill-transparent hover:stroke-gray-600 active:stroke-gray-600 hover:fill-transparent active:fill-transparent':
+                !user,
             })}
           />
         </div>
@@ -101,8 +109,10 @@ export default function PsychologistCard({
               title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
               onClick={handleFavoriteToggle}
               iconClassName={clsx('size-[26px]', {
-                'stroke-black fill-transparent': !isFavorite,
-                'stroke-transparent fill-orange-light': isFavorite,
+                'stroke-black fill-transparent hover:stroke-gray-600 active:stroke-gray-600':
+                  !isFavorite,
+                'stroke-transparent fill-orange-light  hover:fill-orange-dark active:fill-orange-dark':
+                  isFavorite,
               })}
             />
           </div>
