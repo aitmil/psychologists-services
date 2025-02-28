@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Formik, Form } from 'formik';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
@@ -17,7 +16,7 @@ export default function RegisterForm({
   isModal,
   closeModal,
 }: RegisterFormProps) {
-  const { registerWithEmail, signInWithGoogle } = useAuth({
+  const { registerWithEmail } = useAuth({
     isModal,
     closeModal,
   });
@@ -26,7 +25,7 @@ export default function RegisterForm({
     values: typeof initialValuesRegister,
     { resetForm }: { resetForm: () => void }
   ) => {
-    await registerWithEmail(values.email, values.password);
+    await registerWithEmail(values.name, values.email, values.password);
     resetForm();
   };
 
@@ -60,23 +59,6 @@ export default function RegisterForm({
           </Form>
         )}
       </Formik>
-
-      <div className="mt-4 text-center">or</div>
-
-      <Button
-        type="button"
-        variant="outlined"
-        className="w-full mt-4 flex items-center justify-center"
-        onClick={signInWithGoogle}
-      >
-        <Image
-          src="/google-icon.svg"
-          alt="Google icon"
-          width={24}
-          height={24}
-        />
-        <span className="ml-2">Sign in with Google</span>
-      </Button>
     </>
   );
 }

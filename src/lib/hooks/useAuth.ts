@@ -2,8 +2,6 @@ import { useRouter } from 'next/navigation';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
 } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { auth } from '@/lib/firebase/firebase';
@@ -49,7 +47,11 @@ export function useAuth({ isModal, closeModal }: UseAuthProps) {
     }
   };
 
-  const registerWithEmail = async (email: string, password: string) => {
+  const registerWithEmail = async (
+    name: string,
+    email: string,
+    password: string
+  ) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -60,7 +62,7 @@ export function useAuth({ isModal, closeModal }: UseAuthProps) {
 
       dispatch(
         setUser({
-          name: user.displayName || 'User',
+          name: name || 'User',
           email: user.email || '',
           id: user.uid,
         })
@@ -72,40 +74,12 @@ export function useAuth({ isModal, closeModal }: UseAuthProps) {
         router.replace('/');
       }
 
-      toast.success(
-        `Account created successfully, ${user.displayName || 'User'}!`
-      );
+      toast.success(`Account created successfully, ${name || 'User'}!`);
     } catch (error) {
       console.error('Registration error:', error);
       toast.error('Registration failed. Try again.');
     }
   };
 
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      if (isModal && closeModal) closeModal();
-
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      dispatch(
-        setUser({
-          name: user.displayName || 'User',
-          email: user.email || '',
-          id: user.uid,
-        })
-      );
-
-      if (!isModal) router.replace('/');
-
-      toast.success(`Welcome back, ${user.displayName || 'User'}!`);
-    } catch (error) {
-      console.error('Google Sign-In error:', error);
-      toast.error('Google Sign-In failed. Try again.');
-    }
-  };
-
-  return { signInWithEmail, registerWithEmail, signInWithGoogle };
+  return { signInWithEmail, registerWithEmail };
 }

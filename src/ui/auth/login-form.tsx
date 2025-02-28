@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Formik, Form } from 'formik';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
@@ -11,7 +10,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ isModal, closeModal }: LoginFormProps) {
-  const { signInWithEmail, signInWithGoogle } = useAuth({
+  const { signInWithEmail } = useAuth({
     isModal,
     closeModal,
   });
@@ -50,23 +49,6 @@ export default function LoginForm({ isModal, closeModal }: LoginFormProps) {
           </Button>
         </Form>
       </Formik>
-
-      <div className="mt-4 text-center">or</div>
-
-      <Button
-        type="button"
-        variant="outlined"
-        className="w-full mt-4 flex items-center justify-center"
-        onClick={signInWithGoogle}
-      >
-        <Image
-          src="/google-icon.svg"
-          alt="Google icon"
-          width={24}
-          height={24}
-        />
-        <span className="ml-2">Sign in with Google</span>
-      </Button>
     </>
   );
 }
