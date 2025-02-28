@@ -18,7 +18,7 @@ export default function LoginFormModal({ onClose, ...rest }: ModalProps) {
       <IconButton
         icon="icon-cross"
         onClick={onClose}
-        title="Close Mobile Menu"
+        title="Close Login Form Modal"
         className="absolute top-5 right-5 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
         iconClassName="size-8"
       />
