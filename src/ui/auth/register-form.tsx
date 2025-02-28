@@ -1,121 +1,33 @@
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Formik, Form } from 'formik';
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import { getDatabase, ref, set } from 'firebase/database';
-import { toast } from 'react-toastify';
 import InputField from '@/ui/input-field';
 import Button from '@/ui/button';
 import {
   initialValuesRegister,
   registerValidationSchema,
 } from '@/lib/validation';
-import { auth } from '@/lib/firebase/firebase';
-import { useAppDispatch } from '@/lib/redux/hooks';
-import { setUser } from '@/lib/redux/auth/slice';
-import { RegisterFormValues } from '@/lib/definitions';
-import Image from 'next/image';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface RegisterFormProps {
-  onSubmit?: (values: RegisterFormValues) => void | Promise<void>;
+  isModal?: boolean;
+  closeModal?: () => void;
 }
 
-export default function RegisterForm({ onSubmit }: RegisterFormProps) {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
+export default function RegisterForm({
+  isModal,
+  closeModal,
+}: RegisterFormProps) {
+  const { registerWithEmail, signInWithGoogle } = useAuth({
+    isModal,
+    closeModal,
+  });
 
   const handleSubmit = async (
     values: typeof initialValuesRegister,
     { resetForm }: { resetForm: () => void }
   ) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-
-      const user = userCredential.user;
-      await updateProfile(user, { displayName: values.name });
-
-      const db = getDatabase();
-      await set(ref(db, `users/${user.uid}`), {
-        displayName: values.name,
-        email: values.email,
-        id: user.uid,
-      });
-
-      dispatch(
-        setUser({
-          name: values.name,
-          email: values.email,
-          id: user.uid,
-        })
-      );
-
-      resetForm();
-
-      if (onSubmit) {
-        onSubmit(values);
-      }
-
-      router.replace('/');
-
-      toast.success(
-        `Welcome, ${
-          user.displayName || 'User'
-        }! You are now registered and logged in!`
-      );
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error creating user:', error.message);
-        toast.error(`Registration failed: ${error.message}`);
-      } else {
-        console.error('An unknown error occurred:', error);
-        toast.error('An unknown error occurred.');
-      }
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      dispatch(
-        setUser({
-          name: user.displayName || 'User',
-          email: user.email || '',
-          id: user.uid,
-        })
-      );
-
-      if (onSubmit) {
-        onSubmit({
-          name: user.displayName || 'User',
-          email: user.email || '',
-          password: '',
-        });
-      }
-
-      router.replace('/');
-
-      toast.success(`Welcome back, ${user.displayName || 'User'}!`);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error signing in with Google:', error.message);
-        toast.error(`Google Sign-In failed. Try to reload this page.`);
-      } else {
-        console.error('An unknown error occurred:', error);
-        toast.error('An unknown error occurred.');
-      }
-    }
+    await registerWithEmail(values.email, values.password);
+    resetForm();
   };
 
   return (
@@ -155,7 +67,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
         type="button"
         variant="outlined"
         className="w-full mt-4 flex items-center justify-center"
-        onClick={handleGoogleSignIn}
+        onClick={signInWithGoogle}
       >
         <Image
           src="/google-icon.svg"

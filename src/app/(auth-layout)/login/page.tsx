@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <div className="flex justify-center ">
       <div className="w-full max-w-[640px] p-[22px] sm:p-[44px]">
-        <LoginForm />
+        <LoginForm isModal={false} />
       </div>
     </div>
   );

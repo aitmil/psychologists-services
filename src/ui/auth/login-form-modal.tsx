@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import React from 'react';
-
+import { useState } from 'react';
 import LoginForm from '@/ui/auth/login-form';
 import Modal, { ModalProps } from '@/ui/modal';
-import IconButton from '../icon-button';
+import IconButton from '@/ui/icon-button';
 
 export default function LoginFormModal({ onClose, ...rest }: ModalProps) {
+  const [isModal, setIsModal] = useState<boolean>(true);
+
   return (
     <Modal
       {...rest}
@@ -20,7 +22,13 @@ export default function LoginFormModal({ onClose, ...rest }: ModalProps) {
         className="absolute top-5 right-5 stroke-black hover:stroke-gray-600 active:stroke-gray-600"
         iconClassName="size-8"
       />
-      <LoginForm onSubmit={() => onClose()} />
+      <LoginForm
+        isModal={true}
+        closeModal={() => {
+          onClose();
+          setIsModal(false);
+        }}
+      />
     </Modal>
   );
 }
