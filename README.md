@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Psychologists Services
 
-## Getting Started
+Welcome to the **Psychologists Services** repository! This project provides a
+comprehensive platform for clients to see the list of available psychologists,
+add them to favorites in your profile and add the selected psychologists to your
+appointments.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication:** Secure login and registration for clients.
+- **Psychologists Page:** Advanced filtering, sorting, and pagination for better
+  data management. Allows authenticated users to make appointments and
+  add/remove psychologists to/from favorites.
+- **Favorites Page:** Private page with advanced filtering, sorting, and
+  pagination for better data management. Allows authenticated users to make
+  appointments and remove psychologists from favorites.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Live Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉
+[Psychologists Services Dashboard](https://psychologists-services-ivory.vercel.app/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Key Features Practiced
 
-## Learn More
+### TypeScript:
 
-To learn more about Next.js, take a look at the following resources:
+- Strongly typed programming to reduce errors and improve code quality.
+- Modern JavaScript features with type safety.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Next.js
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Server-side rendering (SSR) for improved performance and SEO.
+- Static site generation (SSG) for fast load times.
+- API routes for serverless functions.
+- Dynamic routing and parallel routing using App Router for better navigation
+  and user experience.
+- Client-side rendering for interactive and dynamic content.
 
-## Deploy on Vercel
+### Tailwind CSS
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Utility-first CSS framework for rapid UI development.
+- Responsive design with mobile-first approach.
+- Custom theming and styling.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Firebase Authentication:
+
+- Secure login and registration system.
+- Role-based access control for clients.
+
+### Firebase Realtime Database
+
+- Storing and managing data in real-time.
+- Efficient data synchronization across clients.
+
+## Technologies Used
+
+- **Frontend:** TypeScript, NextJS
+- **State Management:** Context API, Redux
+- **Forms:** Formik, Yup
+- **Styling:** TailwindCSS
+- **Database:** Firebase Realtime Database
+- **Auth:** Firebase Auth
+
+## Future Improvements
+
+### Authentication & Authorization:
+
+- Enhance login with forgot password functionality and email verification.
+- Integrate GoogleAuth for easier login.
+
+### Appointment Management:
+
+- Add user profile menu to update profile information.
+- Integrate S3 bucket for uploading and managing user avatars.
+- Allow users to view their appointments and change passwords.
+
+### Enhanced UI/UX:
+
+- Add testing with tools like Jest and React Testing Library to ensure code
+  reliability.
+
+## Author
+
+This project was developed by **Anna Taranchuk** as part of a full-stack
+development journey.
+
+If you have any questions or suggestions, feel free to reach out:
+
+- **Email**: [taranchuk4@gmail.com](mailto:taranchuk4@gmail.com)
+- **GitHub**: [github.com/aitmil](https://github.com/aitmil)
